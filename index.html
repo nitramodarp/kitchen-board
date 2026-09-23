@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1b2622">
+<title>Kitchen Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --board: #1b2622;
+    --board-2: #243129;
+    --chalk: #efeee6;
+    --dust: #9fada4;
+    --butter: #f0cd5c;
+    --ink: #1b2622;
+    --rule: #3a4a42;
+    --alarm: #ef6b4d;
+    --display: 'Bricolage Grotesque', 'Trebuchet MS', system-ui, sans-serif;
+    --body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--board);
+    color: var(--chalk);
+    font-family: var(--body);
+    display: flex;
+    flex-direction: column;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, a { font-family: inherit; }
+  :focus-visible { outline: 3px solid var(--butter); outline-offset: 2px; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 24px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .clock { display: flex; align-items: baseline; gap: 18px; }
+  #time { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5vw, 56px); line-height: 1; }
+  #date { font-size: clamp(16px, 2vw, 22px); color: var(--dust); }
+  nav { display: flex; align-items: center; gap: 6px; }
+  .tab {
+    background: none; border: 0; color: var(--dust);
+    font-size: 20px; font-weight: 700;
+    padding: 12px 18px; cursor: pointer;
+    border-bottom: 4px solid transparent;
+  }
+  .tab[aria-selected="true"] { color: var(--chalk); border-bottom-color: var(--butter); }
+  .icon-btn {
+    background: none; border: 1px solid var(--rule); color: var(--dust);
+    border-radius: 8px; font-size: 16px; padding: 10px 14px; cursor: pointer; margin-left: 10px;
+  }
+
+  /* ---------- alarm banner ---------- */
+  #alarm {
+    display: none;
+    align-items: center; justify-content: space-between; gap: 16px;
+    background: var(--alarm); color: var(--ink);
+    padding: 12px 24px; font-size: 22px; font-weight: 700;
+  }
+  #alarm.on { display: flex; }
+  #alarm button {
+    background: var(--ink); color: var(--chalk); border: 0; border-radius: 8px;
+    font-size: 18px; font-weight: 700; padding: 10px 20px; cursor: pointer;
+  }
+
+  main { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: auto; }
+  [hidden] { display: none !important; }
+
+  /* ---------- week ---------- */
+  .toolbar { display: flex; justify-content: flex-end; gap: 10px; padding: 10px 24px 0; }
+  .toolbar button {
+    background: none; border: 1px solid var(--rule); color: var(--chalk);
+    border-radius: 8px; font-size: 16px; padding: 8px 16px; cursor: pointer;
+  }
+  .toolbar button.primary { background: var(--butter); color: var(--ink); border-color: var(--butter); font-weight: 700; }
+
+  .week { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 10px; }
+  .day { padding: 14px 16px 24px; border-left: 1px solid var(--rule); min-width: 0; }
+  .day:first-child { border-left: 0; }
+  .day h2 { font-family: var(--display); font-weight: 800; font-size: clamp(17px, 1.75vw, 28px); margin-bottom: 14px; }
+  .dinner { font-size: clamp(18px, 1.9vw, 26px); line-height: 1.25; font-weight: 700; white-space: pre-line; overflow-wrap: break-word; }
+  .dinner.empty { color: var(--dust); font-weight: 400; font-size: 18px; }
+  .plans {
+    margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule);
+    font-size: clamp(16px, 1.6vw, 20px); line-height: 1.35; color: var(--dust); white-space: pre-line; overflow-wrap: break-word;
+  }
+  .plans p + p { margin-top: 9px; }
+  .day.today { background: var(--butter); color: var(--ink); border-left-color: var(--butter); }
+  .day.today .dinner.empty { color: #6b6231; }
+  .day.today .plans { color: #4a4326; border-top-color: #c9a93b; }
+
+  .day textarea {
+    width: 100%; display: block; resize: vertical;
+    background: var(--board-2); color: var(--chalk);
+    border: 1px solid var(--rule); border-radius: 8px;
+    font: inherit; font-size: 18px; padding: 10px; margin-bottom: 10px; min-height: 84px;
+  }
+  .day.today textarea { background: #fff8de; color: var(--ink); border-color: #c9a93b; }
+
+  @media (max-width: 900px) {
+    .week { grid-template-columns: 1fr; }
+    .day { border-left: 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 150px 1fr; column-gap: 16px; align-content: start; }
+    .day:first-child { border-top: 0; }
+    .day h2 { margin: 0; grid-row: 1 / span 2; }
+    .plans { margin-top: 8px; padding-top: 8px; }
+    header { padding: 12px 16px; }
+    .tab { padding: 10px 12px; font-size: 18px; }
+  }
+
+  /* ---------- panels ---------- */
+  .panel { padding: 28px 24px 40px; max-width: 900px; width: 100%; margin: 0 auto; }
+  .panel h2 { font-family: var(--display); font-weight: 800; font-size: 30px; margin-bottom: 8px; }
+  .panel p.lead { color: var(--dust); font-size: 19px; line-height: 1.45; margin-bottom: 24px; max-width: 60ch; }
+
+  .big-links { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+  .big-link {
+    display: inline-block; text-decoration: none; cursor: pointer;
+    background: var(--butter); color: var(--ink); font-weight: 700; font-size: 22px;
+    padding: 18px 28px; border-radius: 12px;
+  }
+  .big-link.quiet { background: none; color: var(--chalk); border: 1px solid var(--rule); }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .presets button {
+    background: none; color: var(--chalk); border: 1px solid var(--chalk);
+    border-radius: 999px; font-size: 22px; font-weight: 700; padding: 14px 26px; cursor: pointer; min-width: 84px;
+  }
+  .presets button:active { background: var(--butter); color: var(--ink); border-color: var(--butter); }
+  .custom { display: flex; gap: 10px; align-items: center; margin-bottom: 30px; font-size: 18px; color: var(--dust); }
+  .custom input {
+    width: 96px; background: var(--board-2); color: var(--chalk);
+    border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 22px; padding: 10px;
+  }
+  .custom button {
+    background: var(--butter); color: var(--ink); border: 0; border-radius: 8px;
+    font-size: 18px; font-weight: 700; padding: 12px 20px; cursor: pointer;
+  }
+
+  #timerList { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+  .timer { border-top: 4px solid var(--butter); padding-top: 10px; }
+  .timer .name { color: var(--dust); font-size: 18px; margin-bottom: 4px; }
+  .timer .left { font-family: var(--display); font-weight: 800; font-size: 64px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .timer .bar { height: 6px; background: var(--rule); border-radius: 3px; margin: 12px 0; overflow: hidden; }
+  .timer .bar i { display: block; height: 100%; background: var(--butter); width: 100%; }
+  .timer .acts { display: flex; gap: 8px; }
+  .timer .acts button {
+    background: none; color: var(--chalk); border: 1px solid var(--rule);
+    border-radius: 8px; font-size: 16px; padding: 8px 14px; cursor: pointer;
+  }
+  .timer.done { border-top-color: var(--alarm); animation: pulse 1s steps(2, jump-none) infinite; }
+  .timer.done .left { color: var(--alarm); }
+  @keyframes pulse { 50% { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) { .timer.done { animation: none; } }
+  .none { color: var(--dust); font-size: 18px; }
+
+  footer { padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px)); color: var(--dust); font-size: 14px; border-top: 1px solid var(--rule); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="clock"><div id="time"></div><div id="date"></div></div>
+  <nav role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-tab="week" aria-selected="true">This week</button>
+    <button class="tab" role="tab" data-tab="groceries" aria-selected="false">Groceries</button>
+    <button class="tab" role="tab" data-tab="timers" aria-selected="false">Timers</button>
+    <button class="icon-btn" id="fs" type="button">Full screen</button>
+  </nav>
+</header>
+
+<div id="alarm" role="alert"><span id="alarmText">Timer done</span><button id="dismiss" type="button">Dismiss</button></div>
+
+<main>
+  <!-- WEEK -->
+  <section id="tab-week" style="display:flex;flex-direction:column;flex:1">
+    <div class="toolbar">
+      <button id="reset" type="button" hidden>Reset to starting menu</button>
+      <button id="clear" type="button" hidden>Clear the week</button>
+      <button id="edit" type="button">Edit</button>
+    </div>
+    <div class="week" id="week"></div>
+  </section>
+
+  <!-- GROCERIES -->
+  <section id="tab-groceries" class="panel" hidden>
+    <h2>Groceries</h2>
+    <p class="lead">The grocery list lives in AnyList. Open it here, add what's running low, and check things off at the store.</p>
+    <div class="big-links">
+      <a class="big-link" href="intent://#Intent;package=com.purplecover.anylist;end">Open the AnyList app</a>
+      <a class="big-link quiet" href="https://www.anylist.com/" target="_blank" rel="noopener">AnyList on the web</a>
+    </div>
+    <p class="lead">To see the list next to the menu, open AnyList first, then use Split screen from the recent apps view and pick the browser showing this page.</p>
+  </section>
+
+  <!-- TIMERS -->
+  <section id="tab-timers" class="panel" hidden>
+    <h2>Timers</h2>
+    <p class="lead">Tap a time to start. Run as many as you need at once.</p>
+    <div class="presets" id="presets"></div>
+    <div class="custom">
+      <label for="customMin">Other</label>
+      <input id="customMin" type="number" inputmode="numeric" min="1" max="600" placeholder="min">
+      <span>minutes</span>
+      <button id="customGo" type="button">Start</button>
+    </div>
+    <div id="timerList"></div>
+    <p class="none" id="noTimers">No timers running.</p>
+  </section>
+</main>
+
+<footer id="wake">Screen keep-awake is off. Tap anywhere to turn it on.</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var DAYS = [['mon','Monday'],['tue','Tuesday'],['wed','Wednesday'],['thu','Thursday'],['fri','Friday'],['sat','Saturday'],['sun','Sunday']];
+  var KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+  var STORE = 'kitchenBoard.v1';
+
+  /* ---------- storage ---------- */
+  var data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { data = {}; }
+  data.days = data.days || {};
+
+  /* Starting menu: Wed Sept 23 to Mon Sept 28. Loads only when nothing has been saved on this tablet yet. */
+  var DEFAULTS = {
+    mon: { dinner: 'Plan next week', plans: '' },
+    tue: { dinner: '', plans: '' },
+    wed: { dinner: "Za'atar chickpea & chicken bowls",
+           plans: 'Ollie: soft rice, chicken, mashed avocado\nOther son: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice. Air-fry the whole tofu block, set half aside.' },
+    thu: { dinner: 'Beluga lentil & butternut stew',
+           plans: 'Pull 1.5 cups plain lentils before the stew\nOllie: blended + half-and-half\nOther son: nuggets, tots, cheese stick' },
+    fri: { dinner: 'Crispy air-fryer tacos',
+           plans: 'Black bean + sweet potato, or chicken\nCook extra black beans + sweet potato\nOllie: soft quesadilla\nOther son: chicken + cheese, tots\nTonight: set up slow-cooker oats' },
+    sat: { dinner: 'White bean & kale skillet, garlic toast',
+           plans: 'Breakfast: slow-cooker apple-cinnamon oats\nOllie: half-and-half in his bowl\nOther son: plain quesadilla, tots' },
+    sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts',
+           plans: 'Cast iron, stovetop, covered\nOllie: frittata + mashed sweet potato\nOther son: eggs + cheese only, cooked first' }
+  };
+  function copyDefaults() { return JSON.parse(JSON.stringify(DEFAULTS)); }
+  var hasSaved = false;
+  try { hasSaved = localStorage.getItem(STORE) !== null; } catch (e) {}
+  if (!hasSaved) data.days = copyDefaults();
+
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }
+
+  /* ---------- helpers ---------- */
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- clock ---------- */
+  var lastDay = -1;
+  function tickClock() {
+    var now = new Date();
+    $('time').textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    $('date').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+    if (now.getDay() !== lastDay) { lastDay = now.getDay(); renderWeek(); }
+  }
+
+  /* ---------- week ---------- */
+  var editing = false;
+  function field(placeholder, value, onChange) {
+    var t = document.createElement('textarea');
+    t.placeholder = placeholder;
+    t.value = value || '';
+    t.rows = 3;
+    t.setAttribute('aria-label', placeholder);
+    t.addEventListener('input', function () { onChange(t.value); save(); });
+    return t;
+  }
+  function renderWeek() {
+    var wk = $('week');
+    wk.innerHTML = '';
+    var today = KEYS[new Date().getDay()];
+    DAYS.forEach(function (pair) {
+      var k = pair[0], label = pair[1];
+      var d = data.days[k] || (data.days[k] = { dinner: '', plans: '' });
+      var col = el('section', 'day' + (k === today ? ' today' : ''));
+      col.appendChild(el('h2', '', label));
+      if (editing) {
+        col.appendChild(field('Dinner', d.dinner, function (v) { d.dinner = v; }));
+        col.appendChild(field('Practice, games, plans', d.plans, function (v) { d.plans = v; }));
+      } else {
+        col.appendChild(el('p', 'dinner' + (d.dinner ? '' : ' empty'), d.dinner || 'Nothing planned'));
+        if (d.plans) {
+          var pl = el('div', 'plans');
+          d.plans.split('\n').forEach(function (line) { if (line.trim()) pl.appendChild(el('p', '', line)); });
+          col.appendChild(pl);
+        }
+      }
+      wk.appendChild(col);
+    });
+    $('edit').textContent = editing ? 'Done' : 'Edit';
+    $('edit').className = editing ? 'primary' : '';
+    $('clear').hidden = !editing;
+    $('reset').hidden = !editing;
+  }
+  $('edit').addEventListener('click', function () { editing = !editing; renderWeek(); });
+  $('reset').addEventListener('click', function () {
+    if (window.confirm('Replace the week with the starting menu from the file?')) {
+      data.days = copyDefaults();
+      save();
+      renderWeek();
+    }
+  });
+  $('clear').addEventListener('click', function () {
+    if (window.confirm('Clear every dinner and plan for the week?')) {
+      data.days = {};
+      save();
+      renderWeek();
+    }
+  });
+
+  /* ---------- tabs ---------- */
+  function showTab(name) {
+    ['week', 'groceries', 'timers'].forEach(function (t) {
+      $('tab-' + t).hidden = (t !== name);
+    });
+    document.querySelectorAll('.tab').forEach(function (b) {
+      b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false');
+    });
+  }
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); });
+  });
+
+  /* ---------- audio ---------- */
+  var audioCtx = null;
+  function beep(freq, len) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.type = 'sine'; o.frequency.value = freq || 800;
+      var l = len || 0.15;
+      g.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + l);
+      o.start(); o.stop(audioCtx.currentTime + l);
+    } catch (e) {}
+  }
+
+  /* ---------- timers ---------- */
+  var timers = [], nextId = 1, lastAlarm = 0;
+  var PRESETS = [1, 3, 5, 10, 15, 20, 30, 45];
+
+  PRESETS.forEach(function (m) {
+    var b = el('button', '', m + ' min');
+    b.type = 'button';
+    b.addEventListener('click', function () { addTimer(m); });
+    $('presets').appendChild(b);
+  });
+  $('customGo').addEventListener('click', function () {
+    var m = parseInt($('customMin').value, 10);
+    if (m > 0) { addTimer(m); $('customMin').value = ''; }
+  });
+
+  function addTimer(min) {
+    beep(660, 0.08);
+    var ms = min * 60000;
+    var t = { id: nextId++, name: 'Timer ' + (nextId - 1), dur: ms, end: Date.now() + ms, done: false, dismissed: false, ui: {} };
+    var root = el('div', 'timer');
+    var name = el('div', 'name', t.name + ' (' + min + ' min)');
+    var left = el('div', 'left', fmt(ms));
+    var bar = el('div', 'bar'); var fill = document.createElement('i'); bar.appendChild(fill);
+    var acts = el('div', 'acts');
+    var plus = el('button', '', 'Add 1 min'); plus.type = 'button';
+    plus.addEventListener('click', function () {
+      t.end += 60000; t.dur += 60000;
+      if (t.done) { t.done = false; t.dismissed = false; root.classList.remove('done'); }
+    });
+    var stop = el('button', '', 'Cancel'); stop.type = 'button';
+    stop.addEventListener('click', function () { removeTimer(t); });
+    acts.append(plus, stop);
+    root.append(name, left, bar, acts);
+    t.ui = { root: root, left: left, fill: fill };
+    timers.push(t);
+    $('timerList').appendChild(root);
+    $('noTimers').hidden = true;
+  }
+  function removeTimer(t) {
+    t.ui.root.remove();
+    timers = timers.filter(function (x) { return x !== t; });
+    $('noTimers').hidden = timers.length > 0;
+    updateAlarmBanner();
+  }
+  function fmt(ms) {
+    var s = Math.max(0, Math.ceil(ms / 1000));
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    var mm = (h ? String(m).padStart(2, '0') : String(m));
+    return (h ? h + ':' : '') + mm + ':' + String(sec).padStart(2, '0');
+  }
+  function updateAlarmBanner() {
+    var ringing = timers.filter(function (t) { return t.done && !t.dismissed; });
+    $('alarm').classList.toggle('on', ringing.length > 0);
+    if (ringing.length) {
+      $('alarmText').textContent = ringing.length === 1 ? ringing[0].name + ' is done' : ringing.length + ' timers are done';
+    }
+  }
+  $('dismiss').addEventListener('click', function () {
+    timers.forEach(function (t) { if (t.done) t.dismissed = true; });
+    updateAlarmBanner();
+  });
+
+  setInterval(function () {
+    var now = Date.now(), ring = false;
+    timers.forEach(function (t) {
+      var remain = t.end - now;
+      if (remain <= 0) {
+        if (!t.done) { t.done = true; t.dismissed = false; t.ui.root.classList.add('done'); showTab('timers'); }
+        t.ui.left.textContent = '0:00';
+        t.ui.fill.style.width = '0%';
+        if (!t.dismissed) ring = true;
+      } else {
+        t.ui.left.textContent = fmt(remain);
+        t.ui.fill.style.width = Math.max(0, Math.min(100, remain / t.dur * 100)) + '%';
+      }
+    });
+    if (ring) {
+      updateAlarmBanner();
+      if (now - lastAlarm > 1800) {
+        lastAlarm = now;
+        beep(880, 0.15);
+        setTimeout(function () { beep(880, 0.15); }, 220);
+        setTimeout(function () { beep(1174, 0.25); }, 440);
+      }
+    }
+  }, 250);
+
+  /* ---------- keep screen awake ---------- */
+  var wl = null;
+  function wakeStatus() {
+    $('wake').textContent = wl ? 'Screen stays on while this page is open.' : 'Screen keep-awake is off. Tap anywhere to turn it on.';
+  }
+  function keepAwake() {
+    if (!('wakeLock' in navigator)) return;
+    navigator.wakeLock.request('screen').then(function (lock) {
+      wl = lock;
+      lock.addEventListener('release', function () { wl = null; wakeStatus(); });
+      wakeStatus();
+    }).catch(function () { wl = null; wakeStatus(); });
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') keepAwake(); });
+  document.addEventListener('pointerdown', function () { if (!wl) keepAwake(); });
+
+  /* ---------- full screen ---------- */
+  $('fs').addEventListener('click', function () {
+    if (document.fullscreenElement) { document.exitFullscreen(); }
+    else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+  });
+
+  /* ---------- go ---------- */
+  tickClock();
+  setInterval(tickClock, 15000);
+  keepAwake();
+  wakeStatus();
+})();
+</script>
+</body>
+</html>
