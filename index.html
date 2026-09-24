@@ -162,7 +162,7 @@
   @media (prefers-reduced-motion: reduce) { .timer.done { animation: none; } }
   .none { color: var(--dust); font-size: 18px; }
 
-  footer { padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px)); color: var(--dust); font-size: 14px; border-top: 1px solid var(--rule); }
+  footer { display: flex; justify-content: space-between; gap: 16px; padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px)); color: var(--dust); font-size: 14px; border-top: 1px solid var(--rule); }
 </style>
 </head>
 <body>
@@ -217,7 +217,7 @@
   </section>
 </main>
 
-<footer id="wake">Screen keep-awake is off. Tap anywhere to turn it on.</footer>
+<footer><span id="wakeMsg">Screen keep-awake is off. Tap anywhere to turn it on.</span><span id="menuVer"></span></footer>
 
 <script>
 (function () {
@@ -247,7 +247,8 @@
     sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts',
            plans: 'Cast iron, stovetop, covered\nOllie: frittata + mashed sweet potato\nOther son: eggs + cheese only, cooked first' }
   };
-  function copyDefaults() { return JSON.parse(JSON.stringify(DEFAULTS)); }
+  var remote = null;   /* the latest menu.json, once it has loaded */
+  function copyDefaults() { return JSON.parse(JSON.stringify(remote ? remote.days : DEFAULTS)); }
   var hasSaved = false;
   try { hasSaved = localStorage.getItem(STORE) !== null; } catch (e) {}
   if (!hasSaved) data.days = copyDefaults();
@@ -314,6 +315,7 @@
   $('reset').addEventListener('click', function () {
     if (window.confirm('Replace the week with the starting menu from the file?')) {
       data.days = copyDefaults();
+      if (remote) data.version = remote.version;
       save();
       renderWeek();
     }
@@ -444,7 +446,7 @@
   /* ---------- keep screen awake ---------- */
   var wl = null;
   function wakeStatus() {
-    $('wake').textContent = wl ? 'Screen stays on while this page is open.' : 'Screen keep-awake is off. Tap anywhere to turn it on.';
+    $('wakeMsg').textContent = wl ? 'Screen stays on while this page is open.' : 'Screen keep-awake is off. Tap anywhere to turn it on.';
   }
   function keepAwake() {
     if (!('wakeLock' in navigator)) return;
@@ -463,11 +465,38 @@
     else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
   });
 
+  /* ---------- weekly menu file ---------- */
+  function showVersion() {
+    $('menuVer').textContent = data.version ? 'Menu ' + data.version : '';
+  }
+  function applyRemote(json) {
+    if (!json || !json.days || !json.version) return;
+    remote = json;
+    if (data.version !== json.version) {
+      /* a new menu.json replaces whatever is on the tablet, including local edits */
+      data.version = json.version;
+      data.days = JSON.parse(JSON.stringify(json.days));
+      save();
+      if (!editing) renderWeek();
+    }
+    showVersion();
+  }
+  function loadMenu() {
+    fetch('menu.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('no menu'); return r.json(); })
+      .then(applyRemote)
+      .catch(function () {});
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') loadMenu(); });
+  setInterval(loadMenu, 5 * 60 * 1000);
+
   /* ---------- go ---------- */
   tickClock();
   setInterval(tickClock, 15000);
   keepAwake();
   wakeStatus();
+  showVersion();
+  loadMenu();
 })();
 </script>
 </body>
