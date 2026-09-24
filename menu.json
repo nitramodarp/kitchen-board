@@ -1,27 +1,33 @@
 {
   "version": "2026-09-23",
   "days": {
-    "mon": { "dinner": "Plan next week", "plans": "" },
-    "tue": { "dinner": "", "plans": "" },
+    "mon": {
+      "dinner": "Plan next week",
+      "plans": ""
+    },
+    "tue": {
+      "dinner": "",
+      "plans": ""
+    },
     "wed": {
       "dinner": "Za'atar chickpea & chicken bowls",
-      "plans": "Ollie: soft rice, chicken, mashed avocado\nOther son: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice. Air-fry the whole tofu block, set half aside."
+      "plans": "Ollie: soft rice, chicken, mashed avocado\nAvett: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice. Air-fry the whole tofu block, set half aside."
     },
     "thu": {
       "dinner": "Beluga lentil & butternut stew",
-      "plans": "Pull 1.5 cups plain lentils before the stew\nOllie: blended + half-and-half\nOther son: nuggets, tots, cheese stick"
+      "plans": "Pull 1.5 cups plain lentils before the stew\nOllie: blended + half-and-half\nAvett: nuggets, tots, cheese stick"
     },
     "fri": {
       "dinner": "Crispy air-fryer tacos",
-      "plans": "Black bean + sweet potato, or chicken\nCook extra black beans + sweet potato\nOllie: soft quesadilla\nOther son: chicken + cheese, tots\nTonight: set up slow-cooker oats"
+      "plans": "Black bean + sweet potato, or chicken\nCook extra black beans + sweet potato\nOllie: soft quesadilla\nAvett: chicken + cheese, tots\nTonight: set up slow-cooker oats"
     },
     "sat": {
       "dinner": "White bean & kale skillet, garlic toast",
-      "plans": "Breakfast: slow-cooker apple-cinnamon oats\nOllie: half-and-half in his bowl\nOther son: plain quesadilla, tots"
+      "plans": "Breakfast: slow-cooker apple-cinnamon oats\nOllie: half-and-half in his bowl\nAvett: plain quesadilla, tots"
     },
     "sun": {
       "dinner": "Mushroom & kale frittata, hot-honey sprouts",
-      "plans": "Cast iron, stovetop, covered\nOllie: frittata + mashed sweet potato\nOther son: eggs + cheese only, cooked first"
+      "plans": "Cast iron, stovetop, covered\nOllie: frittata + mashed sweet potato\nAvett: eggs + cheese only, cooked first"
     }
   }
 }

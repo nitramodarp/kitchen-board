@@ -3,164 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1b2622">
+<meta name="theme-color" content="#2b3328">
 <title>Kitchen Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --board: #1b2622;
-    --board-2: #243129;
-    --chalk: #efeee6;
-    --dust: #9fada4;
-    --butter: #f0cd5c;
-    --ink: #1b2622;
-    --rule: #3a4a42;
-    --alarm: #ef6b4d;
+    --board: #2b3328; --board-2: #333d2e; --chalk: #f3f1e7; --dust: #a9b19c;
+    --sage: #8a9a6e; --gold: #c9a227; --ink: #232b1f; --rule: #454f3f; --alarm: #e2653f;
+    --card: #313b2c;
     --display: 'Bricolage Grotesque', 'Trebuchet MS', system-ui, sans-serif;
     --body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  body.night:not(.awake):not(.photo-open) {
+    --board: #161c14; --board-2: #1c2318; --chalk: #8f9a86; --dust: #5c6555;
+    --gold: #8a7a35; --rule: #262e21; --card: #1c2318;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
-    background: var(--board);
-    color: var(--chalk);
-    font-family: var(--body);
-    display: flex;
-    flex-direction: column;
-    -webkit-tap-highlight-color: transparent;
+    background: var(--board); color: var(--chalk); font-family: var(--body);
+    display: flex; flex-direction: column; -webkit-tap-highlight-color: transparent;
+    transition: background .6s ease, color .6s ease;
   }
-  button, a { font-family: inherit; }
-  :focus-visible { outline: 3px solid var(--butter); outline-offset: 2px; }
+  button, a, input, textarea { font-family: inherit; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 
-  /* ---------- header ---------- */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 14px 24px 12px;
-    border-bottom: 1px solid var(--rule);
-  }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 24px 12px; border-bottom: 1px solid var(--rule); }
   .clock { display: flex; align-items: baseline; gap: 18px; }
-  #time { font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5vw, 56px); line-height: 1; }
-  #date { font-size: clamp(16px, 2vw, 22px); color: var(--dust); }
-  nav { display: flex; align-items: center; gap: 6px; }
-  .tab {
-    background: none; border: 0; color: var(--dust);
-    font-size: 20px; font-weight: 700;
-    padding: 12px 18px; cursor: pointer;
-    border-bottom: 4px solid transparent;
-  }
-  .tab[aria-selected="true"] { color: var(--chalk); border-bottom-color: var(--butter); }
-  .icon-btn {
-    background: none; border: 1px solid var(--rule); color: var(--dust);
-    border-radius: 8px; font-size: 16px; padding: 10px 14px; cursor: pointer; margin-left: 10px;
-  }
+  #time { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 4.5vw, 50px); line-height: 1; }
+  #date { font-size: clamp(15px, 1.8vw, 20px); color: var(--dust); }
+  nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tab { background: none; border: 0; color: var(--dust); font-size: 19px; font-weight: 700; padding: 10px 16px; cursor: pointer; border-bottom: 4px solid transparent; }
+  .tab[aria-selected="true"] { color: var(--chalk); border-bottom-color: var(--gold); }
+  .icon-btn { background: none; border: 1px solid var(--rule); color: var(--dust); border-radius: 8px; font-size: 15px; padding: 9px 13px; cursor: pointer; margin-left: 8px; }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--card); border: 1px solid var(--rule); color: var(--chalk); padding: 12px 20px; border-radius: 10px; font-size: 16px; z-index: 60; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .toast.show { opacity: 1; }
 
-  /* ---------- alarm banner ---------- */
-  #alarm {
-    display: none;
-    align-items: center; justify-content: space-between; gap: 16px;
-    background: var(--alarm); color: var(--ink);
-    padding: 12px 24px; font-size: 22px; font-weight: 700;
-  }
+  #alarm { display: none; align-items: center; justify-content: space-between; gap: 16px; background: var(--alarm); color: #201208; padding: 12px 24px; font-size: 22px; font-weight: 700; }
   #alarm.on { display: flex; }
-  #alarm button {
-    background: var(--ink); color: var(--chalk); border: 0; border-radius: 8px;
-    font-size: 18px; font-weight: 700; padding: 10px 20px; cursor: pointer;
-  }
+  #alarm button { background: #201208; color: var(--chalk); border: 0; border-radius: 8px; font-size: 18px; font-weight: 700; padding: 10px 20px; cursor: pointer; }
+
+  #importBar { display: none; align-items: center; justify-content: space-between; gap: 16px; background: var(--sage); color: #1c2318; padding: 10px 24px; font-size: 17px; font-weight: 700; }
+  #importBar.on { display: flex; }
+  #importBar button { background: #1c2318; color: var(--chalk); border: 0; border-radius: 8px; font-size: 15px; font-weight: 700; padding: 9px 16px; cursor: pointer; }
 
   main { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: auto; }
   [hidden] { display: none !important; }
 
-  /* ---------- week ---------- */
-  .toolbar { display: flex; justify-content: flex-end; gap: 10px; padding: 10px 24px 0; }
-  .toolbar button {
-    background: none; border: 1px solid var(--rule); color: var(--chalk);
-    border-radius: 8px; font-size: 16px; padding: 8px 16px; cursor: pointer;
-  }
-  .toolbar button.primary { background: var(--butter); color: var(--ink); border-color: var(--butter); font-weight: 700; }
+  .toolbar { display: flex; justify-content: flex-end; gap: 10px; padding: 10px 24px 0; flex-wrap: wrap; }
+  .toolbar button { background: none; border: 1px solid var(--rule); color: var(--chalk); border-radius: 8px; font-size: 15px; padding: 8px 15px; cursor: pointer; }
+  .toolbar button.primary { background: var(--gold); color: #201208; border-color: var(--gold); font-weight: 700; }
 
   .week { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 10px; }
   .day { padding: 14px 16px 24px; border-left: 1px solid var(--rule); min-width: 0; }
   .day:first-child { border-left: 0; }
-  .day h2 { font-family: var(--display); font-weight: 800; font-size: clamp(17px, 1.75vw, 28px); margin-bottom: 14px; }
-  .dinner { font-size: clamp(18px, 1.9vw, 26px); line-height: 1.25; font-weight: 700; white-space: pre-line; overflow-wrap: break-word; }
-  .dinner.empty { color: var(--dust); font-weight: 400; font-size: 18px; }
-  .plans {
-    margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule);
-    font-size: clamp(16px, 1.6vw, 20px); line-height: 1.35; color: var(--dust); white-space: pre-line; overflow-wrap: break-word;
-  }
+  .day h2 { font-family: var(--display); font-weight: 800; font-size: clamp(16px, 1.7vw, 26px); margin-bottom: 14px; }
+  .dinner { font-size: clamp(17px, 1.8vw, 25px); line-height: 1.25; font-weight: 700; white-space: pre-line; overflow-wrap: break-word; cursor: pointer; background: none; border: 0; color: inherit; text-align: left; padding: 0; font-family: inherit; display: block; width: 100%; }
+  .dinner.empty { color: var(--dust); font-weight: 400; font-size: 17px; cursor: default; }
+  .dinner .book { font-size: 15px; margin-left: 4px; }
+  .plans { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: clamp(15px, 1.5vw, 19px); line-height: 1.35; color: var(--dust); }
+  .plans p { white-space: pre-line; overflow-wrap: break-word; }
   .plans p + p { margin-top: 9px; }
-  .day.today { background: var(--butter); color: var(--ink); border-left-color: var(--butter); }
-  .day.today .dinner.empty { color: #6b6231; }
-  .day.today .plans { color: #4a4326; border-top-color: #c9a93b; }
-
-  .day textarea {
-    width: 100%; display: block; resize: vertical;
-    background: var(--board-2); color: var(--chalk);
-    border: 1px solid var(--rule); border-radius: 8px;
-    font: inherit; font-size: 18px; padding: 10px; margin-bottom: 10px; min-height: 84px;
-  }
-  .day.today textarea { background: #fff8de; color: var(--ink); border-color: #c9a93b; }
+  .day.today { background: var(--gold); color: #201208; border-left-color: var(--gold); }
+  .day.today .dinner.empty { color: #5a4c12; }
+  .day.today .plans { color: #4a3d10; border-top-color: #a8871c; }
+  .day textarea { width: 100%; display: block; resize: vertical; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 17px; padding: 10px; margin-bottom: 10px; min-height: 84px; }
+  .day.today textarea { background: #fff8de; color: #201208; border-color: #a8871c; }
 
   @media (max-width: 900px) {
     .week { grid-template-columns: 1fr; }
-    .day { border-left: 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 150px 1fr; column-gap: 16px; align-content: start; }
+    .day { border-left: 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 130px 1fr; column-gap: 16px; align-content: start; }
     .day:first-child { border-top: 0; }
     .day h2 { margin: 0; grid-row: 1 / span 2; }
     .plans { margin-top: 8px; padding-top: 8px; }
     header { padding: 12px 16px; }
-    .tab { padding: 10px 12px; font-size: 18px; }
+    .tab { padding: 9px 11px; font-size: 17px; }
   }
 
-  /* ---------- panels ---------- */
-  .panel { padding: 28px 24px 40px; max-width: 900px; width: 100%; margin: 0 auto; }
-  .panel h2 { font-family: var(--display); font-weight: 800; font-size: 30px; margin-bottom: 8px; }
-  .panel p.lead { color: var(--dust); font-size: 19px; line-height: 1.45; margin-bottom: 24px; max-width: 60ch; }
+  .panel { padding: 24px 24px 40px; max-width: 960px; width: 100%; margin: 0 auto; }
+  .panel h2 { font-family: var(--display); font-weight: 800; font-size: 28px; margin-bottom: 8px; }
+  .panel p.lead { color: var(--dust); font-size: 18px; line-height: 1.45; margin-bottom: 22px; max-width: 64ch; }
 
   .big-links { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
-  .big-link {
-    display: inline-block; text-decoration: none; cursor: pointer;
-    background: var(--butter); color: var(--ink); font-weight: 700; font-size: 22px;
-    padding: 18px 28px; border-radius: 12px;
-  }
+  .big-link { display: inline-block; text-decoration: none; cursor: pointer; background: var(--gold); color: #201208; font-weight: 700; font-size: 21px; padding: 17px 26px; border-radius: 12px; border: 0; }
   .big-link.quiet { background: none; color: var(--chalk); border: 1px solid var(--rule); }
 
   .presets { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
-  .presets button {
-    background: none; color: var(--chalk); border: 1px solid var(--chalk);
-    border-radius: 999px; font-size: 22px; font-weight: 700; padding: 14px 26px; cursor: pointer; min-width: 84px;
-  }
-  .presets button:active { background: var(--butter); color: var(--ink); border-color: var(--butter); }
-  .custom { display: flex; gap: 10px; align-items: center; margin-bottom: 30px; font-size: 18px; color: var(--dust); }
-  .custom input {
-    width: 96px; background: var(--board-2); color: var(--chalk);
-    border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 22px; padding: 10px;
-  }
-  .custom button {
-    background: var(--butter); color: var(--ink); border: 0; border-radius: 8px;
-    font-size: 18px; font-weight: 700; padding: 12px 20px; cursor: pointer;
-  }
+  .presets button { background: none; color: var(--chalk); border: 1px solid var(--chalk); border-radius: 999px; font-size: 21px; font-weight: 700; padding: 13px 24px; cursor: pointer; min-width: 80px; }
+  .presets button:active { background: var(--gold); color: #201208; border-color: var(--gold); }
+  .custom { display: flex; gap: 10px; align-items: center; margin-bottom: 28px; font-size: 17px; color: var(--dust); }
+  .custom input { width: 92px; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 21px; padding: 10px; }
+  .custom button { background: var(--gold); color: #201208; border: 0; border-radius: 8px; font-size: 17px; font-weight: 700; padding: 11px 19px; cursor: pointer; }
 
-  #timerList { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-  .timer { border-top: 4px solid var(--butter); padding-top: 10px; }
-  .timer .name { color: var(--dust); font-size: 18px; margin-bottom: 4px; }
-  .timer .left { font-family: var(--display); font-weight: 800; font-size: 64px; line-height: 1; font-variant-numeric: tabular-nums; }
+  #timerList { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+  .timer { border-top: 4px solid var(--gold); padding-top: 10px; }
+  .timer .name { color: var(--dust); font-size: 17px; margin-bottom: 4px; }
+  .timer .left { font-family: var(--display); font-weight: 800; font-size: 60px; line-height: 1; font-variant-numeric: tabular-nums; }
   .timer .bar { height: 6px; background: var(--rule); border-radius: 3px; margin: 12px 0; overflow: hidden; }
-  .timer .bar i { display: block; height: 100%; background: var(--butter); width: 100%; }
+  .timer .bar i { display: block; height: 100%; background: var(--gold); width: 100%; }
   .timer .acts { display: flex; gap: 8px; }
-  .timer .acts button {
-    background: none; color: var(--chalk); border: 1px solid var(--rule);
-    border-radius: 8px; font-size: 16px; padding: 8px 14px; cursor: pointer;
-  }
+  .timer .acts button { background: none; color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; font-size: 15px; padding: 8px 13px; cursor: pointer; }
   .timer.done { border-top-color: var(--alarm); animation: pulse 1s steps(2, jump-none) infinite; }
   .timer.done .left { color: var(--alarm); }
   @keyframes pulse { 50% { opacity: .45; } }
   @media (prefers-reduced-motion: reduce) { .timer.done { animation: none; } }
-  .none { color: var(--dust); font-size: 18px; }
+  .none { color: var(--dust); font-size: 17px; }
+
+  /* recipes tab */
+  .recipe-new { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+  .recipe-new input { flex: 1; min-width: 200px; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 17px; padding: 12px; }
+  .recipe-new button { background: var(--gold); color: #201208; border: 0; border-radius: 8px; font-size: 16px; font-weight: 700; padding: 12px 18px; cursor: pointer; }
+  .search { width: 100%; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; font: inherit; font-size: 17px; padding: 12px; margin-bottom: 18px; }
+  .rlist { display: flex; flex-direction: column; gap: 10px; }
+  .ritem { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; cursor: pointer; }
+  .ritem .rname { font-weight: 700; font-size: 18px; }
+  .ritem .rtags { color: var(--dust); font-size: 14px; margin-top: 3px; }
+  .storage-note { color: var(--dust); font-size: 14px; margin-top: 24px; }
+
+  /* overlay / modal */
+  .overlay { position: fixed; inset: 0; background: rgba(10,13,8,.72); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal { background: var(--board); border: 1px solid var(--rule); border-radius: 14px; max-width: 640px; width: 100%; max-height: 88vh; overflow: auto; padding: 26px; }
+  .modal h3 { font-family: var(--display); font-weight: 800; font-size: 24px; margin-bottom: 4px; }
+  .modal .sub { color: var(--dust); font-size: 15px; margin-bottom: 18px; }
+  .modal-close { float: right; background: none; border: 1px solid var(--rule); color: var(--chalk); border-radius: 8px; padding: 8px 13px; cursor: pointer; font-size: 15px; }
+  .block { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
+  .block h4 { font-size: 15px; letter-spacing: .5px; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
+  .servings-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .servings-row button { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--rule); background: var(--card); color: var(--chalk); font-size: 20px; cursor: pointer; }
+  .servings-row .n { font-weight: 700; font-size: 20px; min-width: 90px; text-align: center; }
+  .ing-list, .step-list { list-style: none; }
+  .ing-list li, .step-list li { padding: 7px 0; font-size: 17px; border-bottom: 1px solid var(--rule); }
+  .step-list { list-style: decimal; padding-left: 22px; }
+  .step-list li { border-bottom: 0; padding: 5px 0; }
+  .ing-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .ing-row input:first-child { width: 80px; }
+  .ing-row input { background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 6px; padding: 8px; font: inherit; font-size: 15px; flex: 1; }
+  .modal textarea.plain { width: 100%; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; padding: 10px; font: inherit; font-size: 15px; min-height: 70px; margin-top: 6px; }
+  .modal input.link { width: 100%; background: var(--board-2); color: var(--chalk); border: 1px solid var(--rule); border-radius: 8px; padding: 10px; font: inherit; font-size: 15px; margin-top: 6px; }
+  .modal a.linkout { color: var(--sage); font-size: 16px; word-break: break-all; }
+  .photo-strip { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .photo-strip img { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid var(--rule); }
+  .small-btn { background: none; border: 1px solid var(--rule); color: var(--chalk); border-radius: 8px; font-size: 14px; padding: 8px 12px; cursor: pointer; margin-top: 8px; }
+  .assign-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .assign-row button { background: var(--card); border: 1px solid var(--rule); color: var(--chalk); border-radius: 8px; font-size: 14px; padding: 8px 12px; cursor: pointer; }
+
+  #photoView { position: fixed; inset: 0; background: #000; z-index: 70; display: flex; align-items: center; justify-content: center; }
+  #photoView img { max-width: 100%; max-height: 100%; }
+  #photoView button { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,.9); border: 0; border-radius: 8px; padding: 10px 16px; font-size: 16px; font-weight: 700; cursor: pointer; }
 
   footer { display: flex; justify-content: space-between; gap: 16px; padding: 8px 24px calc(8px + env(safe-area-inset-bottom, 0px)); color: var(--dust); font-size: 14px; border-top: 1px solid var(--rule); }
 </style>
@@ -171,26 +161,40 @@
   <div class="clock"><div id="time"></div><div id="date"></div></div>
   <nav role="tablist" aria-label="Sections">
     <button class="tab" role="tab" data-tab="week" aria-selected="true">This week</button>
+    <button class="tab" role="tab" data-tab="recipes" aria-selected="false">Recipes</button>
     <button class="tab" role="tab" data-tab="groceries" aria-selected="false">Groceries</button>
     <button class="tab" role="tab" data-tab="timers" aria-selected="false">Timers</button>
     <button class="icon-btn" id="fs" type="button">Full screen</button>
   </nav>
 </header>
 
+<div id="importBar"><span id="importText">A new menu is ready to review</span><button id="importOpen" type="button">Review & import</button></div>
 <div id="alarm" role="alert"><span id="alarmText">Timer done</span><button id="dismiss" type="button">Dismiss</button></div>
 
 <main>
-  <!-- WEEK -->
   <section id="tab-week" style="display:flex;flex-direction:column;flex:1">
     <div class="toolbar">
-      <button id="reset" type="button" hidden>Reset to starting menu</button>
+      <button id="undo" type="button" hidden>Undo last change</button>
       <button id="clear" type="button" hidden>Clear the week</button>
       <button id="edit" type="button">Edit</button>
     </div>
     <div class="week" id="week"></div>
   </section>
 
-  <!-- GROCERIES -->
+  <section id="tab-recipes" class="panel" hidden>
+    <h2>Recipes</h2>
+    <p class="lead">Everything either of you has saved. Tap one to view it, scale it, or send it to a day.</p>
+    <div class="recipe-new">
+      <input id="newRecipeName" type="text" placeholder="New recipe name">
+      <button id="newRecipeGo" type="button">Create</button>
+    </div>
+    <input class="search" id="recipeSearch" type="text" placeholder="Search recipes">
+    <div class="rlist" id="recipeList"></div>
+    <p class="none" id="noRecipes" hidden>No recipes saved yet. Tap a dinner on This week, or create one above.</p>
+    <div class="storage-note" id="storageNote"></div>
+    <button class="big-link quiet" id="exportBtn" type="button" style="margin-top:16px">Export recipe library</button>
+  </section>
+
   <section id="tab-groceries" class="panel" hidden>
     <h2>Groceries</h2>
     <p class="lead">The grocery list lives in AnyList. Open it here, add what's running low, and check things off at the store.</p>
@@ -201,7 +205,6 @@
     <p class="lead">To see the list next to the menu, open AnyList first, then use Split screen from the recent apps view and pick the browser showing this page.</p>
   </section>
 
-  <!-- TIMERS -->
   <section id="tab-timers" class="panel" hidden>
     <h2>Timers</h2>
     <p class="lead">Tap a time to start. Run as many as you need at once.</p>
@@ -219,85 +222,156 @@
 
 <footer><span id="wakeMsg">Screen keep-awake is off. Tap anywhere to turn it on.</span><span id="menuVer"></span></footer>
 
+<div class="overlay" id="importOverlay" hidden>
+  <div class="modal" id="importModal"></div>
+</div>
+<div class="overlay" id="recipeOverlay" hidden>
+  <div class="modal" id="recipeModal"></div>
+</div>
+<div id="photoView" hidden><button id="photoClose" type="button">Close</button><img id="photoImg" alt="Recipe photo"></div>
+<div class="toast" id="toast"></div>
+<input type="file" accept="image/*" capture="environment" id="photoInput" style="display:none">
+
 <script>
 (function () {
   'use strict';
 
   var DAYS = [['mon','Monday'],['tue','Tuesday'],['wed','Wednesday'],['thu','Thursday'],['fri','Friday'],['sat','Saturday'],['sun','Sunday']];
   var KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
-  var STORE = 'kitchenBoard.v1';
+  var STORE = 'kitchenBoard.v2';
 
-  /* ---------- storage ---------- */
+  /* ---------- small helpers ---------- */
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3200);
+  }
+  function normKey(name) { return (name || '').toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim(); }
+  function levenshtein(a, b) {
+    var m = a.length, n = b.length, dp = [];
+    for (var i = 0; i <= m; i++) dp.push([i]);
+    for (var j = 0; j <= n; j++) dp[0][j] = j;
+    for (i = 1; i <= m; i++) for (j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+    return dp[m][n];
+  }
+
+  /* ---------- week/day storage (localStorage) ---------- */
   var data = {};
   try { data = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { data = {}; }
   data.days = data.days || {};
+  data.undo = data.undo || null;
 
-  /* Starting menu: Wed Sept 23 to Mon Sept 28. Loads only when nothing has been saved on this tablet yet. */
   var DEFAULTS = {
-    mon: { dinner: 'Plan next week', plans: '' },
-    tue: { dinner: '', plans: '' },
-    wed: { dinner: "Za'atar chickpea & chicken bowls",
-           plans: 'Ollie: soft rice, chicken, mashed avocado\nOther son: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice. Air-fry the whole tofu block, set half aside.' },
-    thu: { dinner: 'Beluga lentil & butternut stew',
-           plans: 'Pull 1.5 cups plain lentils before the stew\nOllie: blended + half-and-half\nOther son: nuggets, tots, cheese stick' },
-    fri: { dinner: 'Crispy air-fryer tacos',
-           plans: 'Black bean + sweet potato, or chicken\nCook extra black beans + sweet potato\nOllie: soft quesadilla\nOther son: chicken + cheese, tots\nTonight: set up slow-cooker oats' },
-    sat: { dinner: 'White bean & kale skillet, garlic toast',
-           plans: 'Breakfast: slow-cooker apple-cinnamon oats\nOllie: half-and-half in his bowl\nOther son: plain quesadilla, tots' },
-    sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts',
-           plans: 'Cast iron, stovetop, covered\nOllie: frittata + mashed sweet potato\nOther son: eggs + cheese only, cooked first' }
+    mon: { dinner: 'Plan next week', plans: '', recipe: null },
+    tue: { dinner: '', plans: '', recipe: null },
+    wed: { dinner: "Za'atar chickpea & chicken bowls", plans: "Ollie: soft rice, chicken, mashed avocado\nAvett: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice.", recipe: null },
+    thu: { dinner: 'Beluga lentil & butternut stew', plans: 'Ollie: blended + half-and-half\nAvett: nuggets, tots, cheese stick', recipe: null },
+    fri: { dinner: 'Crispy air-fryer tacos', plans: 'Black bean + sweet potato, or chicken\nOllie: soft quesadilla\nAvett: chicken + cheese, tots', recipe: null },
+    sat: { dinner: 'White bean & kale skillet, garlic toast', plans: '', recipe: null },
+    sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts', plans: '', recipe: null }
   };
-  var remote = null;   /* the latest menu.json, once it has loaded */
-  function copyDefaults() { return JSON.parse(JSON.stringify(remote ? remote.days : DEFAULTS)); }
   var hasSaved = false;
   try { hasSaved = localStorage.getItem(STORE) !== null; } catch (e) {}
-  if (!hasSaved) data.days = copyDefaults();
+  if (!hasSaved) { data.days = JSON.parse(JSON.stringify(DEFAULTS)); data.version = null; }
 
   function save() { try { localStorage.setItem(STORE, JSON.stringify(data)); } catch (e) {} }
+  function snapshotForUndo() { data.undo = JSON.parse(JSON.stringify(data.days)); }
 
-  /* ---------- helpers ---------- */
-  function el(tag, cls, text) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (text != null) n.textContent = text;
-    return n;
+  /* ---------- IndexedDB recipe library ---------- */
+  var dbp = new Promise(function (resolve, reject) {
+    var req = indexedDB.open('kitchenBoardDB', 1);
+    req.onupgradeneeded = function () {
+      var db = req.result;
+      if (!db.objectStoreNames.contains('recipes')) db.createObjectStore('recipes', { keyPath: 'key' });
+      if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'k' });
+    };
+    req.onsuccess = function () { resolve(req.result); };
+    req.onerror = function () { reject(req.error); };
+  });
+  function idbGetAllRecipes() { return dbp.then(function (db) { return new Promise(function (res) { var t = db.transaction('recipes','readonly').objectStore('recipes').getAll(); t.onsuccess = function () { res(t.result || []); }; t.onerror = function () { res([]); }; }); }); }
+  function idbGetRecipe(key) { return dbp.then(function (db) { return new Promise(function (res) { var t = db.transaction('recipes','readonly').objectStore('recipes').get(key); t.onsuccess = function () { res(t.result || null); }; t.onerror = function () { res(null); }; }); }); }
+  function idbPutRecipe(rec) { return dbp.then(function (db) { return new Promise(function (res, rej) { var t = db.transaction('recipes','readwrite').objectStore('recipes').put(rec); t.onsuccess = function () { res(rec); }; t.onerror = function () { rej(t.error); }; }); }); }
+  function idbMeta(key) { return dbp.then(function (db) { return new Promise(function (res) { var t = db.transaction('meta','readonly').objectStore('meta').get(key); t.onsuccess = function () { res(t.result || null); }; t.onerror = function () { res(null); }; }); }); }
+  function idbSetMeta(rec) { return dbp.then(function (db) { return new Promise(function (res) { var t = db.transaction('meta','readwrite').objectStore('meta').put(rec); t.onsuccess = function () { res(true); }; t.onerror = function () { res(false); }; }); }); }
+
+  function blankRecipe(key, name) {
+    return { key: key, name: name, text: null, link: null, photos: [], updated: Date.now() };
   }
-  function $(id) { return document.getElementById(id); }
 
-  /* ---------- clock ---------- */
-  var lastDay = -1;
+  /* find an existing recipe by fuzzy name match; returns {exact} or {close:[names]} or null */
+  function findMatch(name, allRecipes) {
+    var k = normKey(name);
+    var exact = allRecipes.filter(function (r) { return r.key === k; })[0];
+    if (exact) return { exact: exact };
+    var close = allRecipes.filter(function (r) {
+      if (Math.abs(r.key.length - k.length) > 4) return false;
+      return levenshtein(r.key, k) <= 2 && k.length > 3;
+    });
+    if (close.length) return { close: close };
+    return null;
+  }
+
+  /* ---------- clock + night mode ---------- */
+  var lastDay = -1, nightTick = null, awakeTimer = null;
+  function inNightWindow(d) { var h = d.getHours(); return h >= 22 || h < 7; }
+  function applyNight() {
+    var d = new Date();
+    document.body.classList.toggle('night', inNightWindow(d));
+  }
+  function wakeUp() {
+    if (!document.body.classList.contains('night')) return;
+    document.body.classList.add('awake');
+    clearTimeout(awakeTimer);
+    awakeTimer = setTimeout(function () { document.body.classList.remove('awake'); }, 90000);
+  }
+  document.addEventListener('pointerdown', wakeUp);
+
   function tickClock() {
     var now = new Date();
     $('time').textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     $('date').textContent = now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
     if (now.getDay() !== lastDay) { lastDay = now.getDay(); renderWeek(); }
+    applyNight();
   }
 
-  /* ---------- week ---------- */
+  /* ---------- week rendering ---------- */
   var editing = false;
   function field(placeholder, value, onChange) {
     var t = document.createElement('textarea');
-    t.placeholder = placeholder;
-    t.value = value || '';
-    t.rows = 3;
-    t.setAttribute('aria-label', placeholder);
-    t.addEventListener('input', function () { onChange(t.value); save(); });
+    t.placeholder = placeholder; t.value = value || ''; t.rows = 3; t.setAttribute('aria-label', placeholder);
+    t.addEventListener('input', function () { onChange(t.value); });
     return t;
   }
   function renderWeek() {
-    var wk = $('week');
-    wk.innerHTML = '';
+    var wk = $('week'); wk.innerHTML = '';
     var today = KEYS[new Date().getDay()];
     DAYS.forEach(function (pair) {
       var k = pair[0], label = pair[1];
-      var d = data.days[k] || (data.days[k] = { dinner: '', plans: '' });
+      var d = data.days[k] || (data.days[k] = { dinner: '', plans: '', recipe: null });
       var col = el('section', 'day' + (k === today ? ' today' : ''));
       col.appendChild(el('h2', '', label));
       if (editing) {
-        col.appendChild(field('Dinner', d.dinner, function (v) { d.dinner = v; }));
+        var dinnerBox = field('Dinner', d.dinner, function (v) {
+          if (d.recipe && normKey(v) !== d.recipe) { d.recipe = null; toast('Recipe link removed for ' + label + ' (name changed)'); }
+          d.dinner = v;
+        });
+        col.appendChild(dinnerBox);
         col.appendChild(field('Practice, games, plans', d.plans, function (v) { d.plans = v; }));
       } else {
-        col.appendChild(el('p', 'dinner' + (d.dinner ? '' : ' empty'), d.dinner || 'Nothing planned'));
+        var btn = el('button', 'dinner' + (d.dinner ? '' : ' empty'));
+        btn.type = 'button';
+        btn.textContent = d.dinner || 'Nothing planned';
+        if (d.dinner) {
+          if (d.recipe) { var b = el('span','book','📖'); btn.appendChild(b); }
+          btn.addEventListener('click', function () { openRecipeFor(k, label); });
+        } else {
+          btn.disabled = true;
+        }
+        col.appendChild(btn);
         if (d.plans) {
           var pl = el('div', 'plans');
           d.plans.split('\n').forEach(function (line) { if (line.trim()) pl.appendChild(el('p', '', line)); });
@@ -309,36 +383,345 @@
     $('edit').textContent = editing ? 'Done' : 'Edit';
     $('edit').className = editing ? 'primary' : '';
     $('clear').hidden = !editing;
-    $('reset').hidden = !editing;
+    $('undo').hidden = !data.undo;
   }
-  $('edit').addEventListener('click', function () { editing = !editing; renderWeek(); });
-  $('reset').addEventListener('click', function () {
-    if (window.confirm('Replace the week with the starting menu from the file?')) {
-      data.days = copyDefaults();
-      if (remote) data.version = remote.version;
+  $('edit').addEventListener('click', function () {
+    if (!editing) {
+      snapshotForUndo();               /* capture state before any field can mutate it */
+    } else {
       save();
-      renderWeek();
     }
+    editing = !editing;
+    renderWeek();
   });
   $('clear').addEventListener('click', function () {
-    if (window.confirm('Clear every dinner and plan for the week?')) {
-      data.days = {};
-      save();
-      renderWeek();
+    if (window.confirm('Clear every dinner and plan for the week? Recipes already saved to the library are not affected.')) {
+      snapshotForUndo();
+      Object.keys(data.days).forEach(function (k) { data.days[k] = { dinner: '', plans: '', recipe: null }; });
+      save(); renderWeek();
     }
+  });
+  $('undo').addEventListener('click', function () {
+    if (!data.undo) return;
+    data.days = data.undo; data.undo = null; save(); renderWeek();
   });
 
   /* ---------- tabs ---------- */
   function showTab(name) {
-    ['week', 'groceries', 'timers'].forEach(function (t) {
-      $('tab-' + t).hidden = (t !== name);
-    });
-    document.querySelectorAll('.tab').forEach(function (b) {
-      b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false');
+    ['week', 'recipes', 'groceries', 'timers'].forEach(function (t) { $('tab-' + t).hidden = (t !== name); });
+    document.querySelectorAll('.tab').forEach(function (b) { b.setAttribute('aria-selected', b.getAttribute('data-tab') === name ? 'true' : 'false'); });
+    if (name === 'recipes') renderRecipeList();
+  }
+  document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); }); });
+
+  /* ---------- recipe modal ---------- */
+  var activeRecipeKey = null, activeDayKey = null, activeServings = 1;
+
+  function openRecipeFor(dayKey, dayLabel) {
+    var d = data.days[dayKey];
+    if (d.recipe) { openRecipeModal(d.recipe, dayKey); return; }
+    idbGetAllRecipes().then(function (all) {
+      var match = findMatch(d.dinner, all);
+      if (match && match.exact) {
+        d.recipe = match.exact.key; save(); openRecipeModal(match.exact.key, dayKey);
+      } else if (match && match.close && match.close.length) {
+        var name = match.close[0].name;
+        if (window.confirm('Is this the same as "' + name + '" in your recipe library?\n\nOK = use that recipe. Cancel = start a new one for "' + d.dinner + '".')) {
+          d.recipe = match.close[0].key; save(); openRecipeModal(match.close[0].key, dayKey);
+        } else {
+          createAndOpen(d.dinner, dayKey);
+        }
+      } else {
+        createAndOpen(d.dinner, dayKey);
+      }
     });
   }
-  document.querySelectorAll('.tab').forEach(function (b) {
-    b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); });
+  function createAndOpen(name, dayKey) {
+    var key = normKey(name);
+    var rec = blankRecipe(key, name);
+    idbPutRecipe(rec).then(function () {
+      if (dayKey) { data.days[dayKey].recipe = key; save(); }
+      openRecipeModal(key, dayKey || null);
+    });
+  }
+
+  function openRecipeModal(key, dayKey) {
+    activeRecipeKey = key; activeDayKey = dayKey || null;
+    idbGetRecipe(key).then(function (rec) {
+      if (!rec) return;
+      activeServings = (rec.text && rec.text.servings) || 1;
+      renderRecipeModal(rec);
+      $('recipeOverlay').hidden = false;
+    });
+  }
+  function closeRecipeModal() { $('recipeOverlay').hidden = true; activeRecipeKey = null; activeDayKey = null; }
+
+  function scaleAmt(base, servings, factor) {
+    if (base == null || isNaN(base)) return '';
+    var v = base * factor / servings;
+    v = Math.round(v * 100) / 100;
+    return (v % 1 === 0) ? String(v) : String(v);
+  }
+
+  function renderRecipeModal(rec) {
+    var m = $('recipeModal'); m.innerHTML = '';
+    var closeBtn = el('button','modal-close','Close'); closeBtn.type='button'; closeBtn.addEventListener('click', closeRecipeModal);
+    m.appendChild(closeBtn);
+    m.appendChild(el('h3','', rec.name));
+    m.appendChild(el('div','sub', activeDayKey ? 'Attached to this day\u2019s dinner' : 'From your recipe library'));
+
+    /* text recipe */
+    var tb = el('div','block'); tb.appendChild(el('h4','','Recipe'));
+    if (rec.text) {
+      var sRow = el('div','servings-row');
+      var minus = el('button','','\u2212'); minus.type='button';
+      var count = el('span','n', activeServings + ' servings');
+      var plus = el('button','','+'); plus.type='button';
+      minus.addEventListener('click', function () { if (activeServings > 1) { activeServings--; count.textContent = activeServings + ' servings'; renderIngredients(); } });
+      plus.addEventListener('click', function () { activeServings++; count.textContent = activeServings + ' servings'; renderIngredients(); });
+      sRow.append(minus, count, plus); tb.appendChild(sRow);
+      var ingUl = el('ul','ing-list'); tb.appendChild(ingUl);
+      function renderIngredients() {
+        ingUl.innerHTML = '';
+        (rec.text.ingredients || []).forEach(function (ing) {
+          var amt = ing.amount != null && ing.amount !== '' ? scaleAmt(parseFloat(ing.amount), rec.text.servings || 1, activeServings) : '';
+          ingUl.appendChild(el('li','', (amt ? amt + ' ' : '') + (ing.rest || '')));
+        });
+      }
+      renderIngredients();
+      if ((rec.text.steps || []).length) {
+        var stepOl = el('ol','step-list');
+        rec.text.steps.forEach(function (s) { if (s.trim()) stepOl.appendChild(el('li','', s)); });
+        tb.appendChild(stepOl);
+      }
+      var editTextBtn = el('button','small-btn','Edit this recipe'); editTextBtn.type='button';
+      editTextBtn.addEventListener('click', function () { openTextEditor(rec); });
+      tb.appendChild(editTextBtn);
+    } else {
+      var addTextBtn = el('button','small-btn','Add ingredients & steps'); addTextBtn.type='button';
+      addTextBtn.addEventListener('click', function () { openTextEditor(rec); });
+      tb.appendChild(addTextBtn);
+    }
+    m.appendChild(tb);
+
+    /* link */
+    var lb = el('div','block'); lb.appendChild(el('h4','','Link'));
+    if (rec.link) {
+      var a = el('a','linkout', rec.link); a.href = rec.link; a.target = '_blank'; a.rel = 'noopener'; lb.appendChild(a);
+      var editLinkBtn = el('button','small-btn','Change link'); editLinkBtn.type='button';
+      editLinkBtn.addEventListener('click', function () { openLinkEditor(rec); });
+      lb.appendChild(document.createElement('br')); lb.appendChild(editLinkBtn);
+    } else {
+      var addLinkBtn = el('button','small-btn','Add a link'); addLinkBtn.type='button';
+      addLinkBtn.addEventListener('click', function () { openLinkEditor(rec); });
+      lb.appendChild(addLinkBtn);
+    }
+    m.appendChild(lb);
+
+    /* photos */
+    var pb = el('div','block'); pb.appendChild(el('h4','','Photos'));
+    var strip = el('div','photo-strip');
+    (rec.photos || []).forEach(function (p) {
+      var img = el('img'); img.src = p.dataUrl; img.alt = rec.name + ' photo';
+      img.addEventListener('click', function () { openPhotoViewer(p.dataUrl); });
+      strip.appendChild(img);
+    });
+    pb.appendChild(strip);
+    var addPhotoBtn = el('button','small-btn','Take a photo'); addPhotoBtn.type='button';
+    addPhotoBtn.addEventListener('click', function () { $('photoInput').click(); });
+    pb.appendChild(addPhotoBtn);
+    m.appendChild(pb);
+
+    /* assign to day (only meaningful from Recipes tab, but harmless elsewhere) */
+    var ab = el('div','block'); ab.appendChild(el('h4','','Add to a day'));
+    var arow = el('div','assign-row');
+    DAYS.forEach(function (pair) {
+      var b = el('button','',pair[1].slice(0,3)); b.type='button';
+      b.addEventListener('click', function () {
+        snapshotForUndo();
+        data.days[pair[0]].dinner = rec.name;
+        data.days[pair[0]].recipe = rec.key;
+        save(); renderWeek();
+        toast(rec.name + ' added to ' + pair[1]);
+      });
+      arow.appendChild(b);
+    });
+    ab.appendChild(arow);
+    m.appendChild(ab);
+  }
+
+  function openTextEditor(rec) {
+    var m = $('recipeModal'); m.innerHTML = '';
+    var closeBtn = el('button','modal-close','Cancel'); closeBtn.type='button';
+    closeBtn.addEventListener('click', function () { openRecipeModal(rec.key, activeDayKey); });
+    m.appendChild(closeBtn);
+    m.appendChild(el('h3','', rec.name + ' \u2014 ingredients'));
+    m.appendChild(el('div','sub','Enter the amount and the rest of the line separately, so servings can scale.'));
+
+    var servingsRow = el('div','servings-row');
+    servingsRow.appendChild(el('span','','Base servings'));
+    var sIn = document.createElement('input'); sIn.type='number'; sIn.min='1'; sIn.value = (rec.text && rec.text.servings) || 4;
+    sIn.style.width='70px'; sIn.style.marginLeft='10px';
+    sIn.style.background='var(--board-2)'; sIn.style.color='var(--chalk)'; sIn.style.border='1px solid var(--rule)'; sIn.style.borderRadius='6px'; sIn.style.padding='8px';
+    servingsRow.appendChild(sIn);
+    m.appendChild(servingsRow);
+
+    var rows = el('div','','');
+    m.appendChild(rows);
+    var ingredients = (rec.text && rec.text.ingredients) ? rec.text.ingredients.slice() : [];
+    function drawRows() {
+      rows.innerHTML = '';
+      ingredients.forEach(function (ing, i) {
+        var r = el('div','ing-row');
+        var a = document.createElement('input'); a.type='text'; a.placeholder='amount'; a.value = ing.amount != null ? ing.amount : '';
+        var b = document.createElement('input'); b.type='text'; b.placeholder='cups rice, chopped, etc.'; b.value = ing.rest || '';
+        a.addEventListener('input', function () { ingredients[i].amount = a.value; });
+        b.addEventListener('input', function () { ingredients[i].rest = b.value; });
+        var rm = el('button','small-btn','\u2715'); rm.type='button';
+        rm.addEventListener('click', function () { ingredients.splice(i,1); drawRows(); });
+        r.append(a,b,rm); rows.appendChild(r);
+      });
+    }
+    drawRows();
+    var addRow = el('button','small-btn','+ Ingredient'); addRow.type='button';
+    addRow.addEventListener('click', function () { ingredients.push({amount:'',rest:''}); drawRows(); });
+    m.appendChild(addRow);
+
+    var stepsBlock = el('div','block'); stepsBlock.appendChild(el('h4','','Steps (one per line)'));
+    var stepsTa = document.createElement('textarea'); stepsTa.className = 'plain';
+    stepsTa.value = (rec.text && rec.text.steps) ? rec.text.steps.join('\n') : '';
+    stepsBlock.appendChild(stepsTa);
+    m.appendChild(stepsBlock);
+
+    var saveBtn = el('button','big-link','Save recipe'); saveBtn.type='button'; saveBtn.style.marginTop='20px';
+    saveBtn.addEventListener('click', function () {
+      rec.text = { servings: parseInt(sIn.value,10) || 4, ingredients: ingredients.filter(function(i){return i.amount || i.rest;}), steps: stepsTa.value.split('\n') };
+      rec.updated = Date.now();
+      idbPutRecipe(rec).then(function () { openRecipeModal(rec.key, activeDayKey); toast('Recipe saved'); });
+    });
+    m.appendChild(saveBtn);
+  }
+
+  function openLinkEditor(rec) {
+    var m = $('recipeModal'); m.innerHTML = '';
+    var closeBtn = el('button','modal-close','Cancel'); closeBtn.type='button';
+    closeBtn.addEventListener('click', function () { openRecipeModal(rec.key, activeDayKey); });
+    m.appendChild(closeBtn);
+    m.appendChild(el('h3','', rec.name + ' \u2014 link'));
+    var inp = document.createElement('input'); inp.className='link'; inp.type='url'; inp.placeholder='https://...'; inp.value = rec.link || '';
+    m.appendChild(inp);
+    var saveBtn = el('button','big-link','Save link'); saveBtn.type='button'; saveBtn.style.marginTop='16px'; saveBtn.style.display='block';
+    saveBtn.addEventListener('click', function () {
+      rec.link = inp.value.trim() || null; rec.updated = Date.now();
+      idbPutRecipe(rec).then(function () { openRecipeModal(rec.key, activeDayKey); toast('Link saved'); });
+    });
+    m.appendChild(saveBtn);
+  }
+
+  /* photo capture: compress via canvas, store as dataURL */
+  $('photoInput').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    this.value = '';
+    if (!file || !activeRecipeKey) return;
+    var img = new Image();
+    var reader = new FileReader();
+    reader.onload = function () {
+      img.onload = function () {
+        var maxDim = 1280;
+        var scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale); canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+        idbGetRecipe(activeRecipeKey).then(function (rec) {
+          rec.photos = rec.photos || [];
+          rec.photos.push({ id: Date.now(), dataUrl: dataUrl });
+          rec.updated = Date.now();
+          idbPutRecipe(rec).then(function () { openRecipeModal(rec.key, activeDayKey); toast('Photo saved'); checkStorage(); });
+        });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function openPhotoViewer(src) {
+    $('photoImg').src = src;
+    $('photoView').hidden = false;
+    document.body.classList.add('photo-open');
+  }
+  $('photoClose').addEventListener('click', function () { $('photoView').hidden = true; document.body.classList.remove('photo-open'); });
+
+  /* ---------- recipes tab list ---------- */
+  function renderRecipeList() {
+    idbGetAllRecipes().then(function (all) {
+      all.sort(function (a,b) { return a.name.localeCompare(b.name); });
+      var q = normKey($('recipeSearch').value);
+      var filtered = q ? all.filter(function (r) { return normKey(r.name).indexOf(q) !== -1; }) : all;
+      var list = $('recipeList'); list.innerHTML = '';
+      $('noRecipes').hidden = all.length > 0;
+      filtered.forEach(function (r) {
+        var item = el('div','ritem');
+        var left = el('div');
+        left.appendChild(el('div','rname', r.name));
+        var tags = [];
+        if (r.text) tags.push('ingredients');
+        if (r.link) tags.push('link');
+        if (r.photos && r.photos.length) tags.push(r.photos.length + ' photo' + (r.photos.length>1?'s':''));
+        left.appendChild(el('div','rtags', tags.length ? tags.join(' \u00b7 ') : 'empty \u2014 tap to add'));
+        item.appendChild(left);
+        item.addEventListener('click', function () { openRecipeModal(r.key, null); });
+        list.appendChild(item);
+      });
+    });
+    checkStorage();
+  }
+  $('recipeSearch').addEventListener('input', renderRecipeList);
+  $('newRecipeGo').addEventListener('click', function () {
+    var name = $('newRecipeName').value.trim();
+    if (!name) return;
+    idbGetAllRecipes().then(function (all) {
+      var match = findMatch(name, all);
+      if (match && match.exact) { openRecipeModal(match.exact.key, null); }
+      else { createAndOpen(name, null); }
+      $('newRecipeName').value = '';
+    });
+  });
+
+  function checkStorage() {
+    idbMeta('lastBackup').then(function (m) {
+      var note = '';
+      if (m && m.ts) {
+        var days = Math.floor((Date.now() - m.ts) / 86400000);
+        note = 'Last backed up ' + (days === 0 ? 'today' : days + ' day' + (days>1?'s':'') + ' ago') + '.';
+      } else {
+        note = 'Never backed up. Recipes and photos exist only on this tablet.';
+      }
+      if (navigator.storage && navigator.storage.estimate) {
+        navigator.storage.estimate().then(function (est) {
+          if (est.quota) {
+            var pct = Math.round(100 * est.usage / est.quota);
+            note += ' Storage: ' + pct + '% used.';
+            if (pct > 80) note += ' Getting full \u2014 consider exporting and clearing old photos.';
+          }
+          $('storageNote').textContent = note;
+        });
+      } else {
+        $('storageNote').textContent = note;
+      }
+    });
+  }
+
+  $('exportBtn').addEventListener('click', function () {
+    idbGetAllRecipes().then(function (all) {
+      var blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), recipes: all }, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'kitchen-recipes-' + new Date().toISOString().slice(0,10) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      idbSetMeta({ k: 'lastBackup', ts: Date.now() }).then(checkStorage);
+      toast('Library exported');
+    });
   });
 
   /* ---------- audio ---------- */
@@ -359,144 +742,141 @@
   /* ---------- timers ---------- */
   var timers = [], nextId = 1, lastAlarm = 0;
   var PRESETS = [1, 3, 5, 10, 15, 20, 30, 45];
-
-  PRESETS.forEach(function (m) {
-    var b = el('button', '', m + ' min');
-    b.type = 'button';
-    b.addEventListener('click', function () { addTimer(m); });
-    $('presets').appendChild(b);
-  });
-  $('customGo').addEventListener('click', function () {
-    var m = parseInt($('customMin').value, 10);
-    if (m > 0) { addTimer(m); $('customMin').value = ''; }
-  });
-
+  PRESETS.forEach(function (m) { var b = el('button','',m + ' min'); b.type='button'; b.addEventListener('click', function () { addTimer(m); }); $('presets').appendChild(b); });
+  $('customGo').addEventListener('click', function () { var m = parseInt($('customMin').value, 10); if (m > 0) { addTimer(m); $('customMin').value = ''; } });
   function addTimer(min) {
     beep(660, 0.08);
     var ms = min * 60000;
     var t = { id: nextId++, name: 'Timer ' + (nextId - 1), dur: ms, end: Date.now() + ms, done: false, dismissed: false, ui: {} };
-    var root = el('div', 'timer');
-    var name = el('div', 'name', t.name + ' (' + min + ' min)');
-    var left = el('div', 'left', fmt(ms));
-    var bar = el('div', 'bar'); var fill = document.createElement('i'); bar.appendChild(fill);
-    var acts = el('div', 'acts');
-    var plus = el('button', '', 'Add 1 min'); plus.type = 'button';
-    plus.addEventListener('click', function () {
-      t.end += 60000; t.dur += 60000;
-      if (t.done) { t.done = false; t.dismissed = false; root.classList.remove('done'); }
-    });
-    var stop = el('button', '', 'Cancel'); stop.type = 'button';
+    var root = el('div','timer');
+    var name = el('div','name', t.name + ' (' + min + ' min)');
+    var left = el('div','left', fmt(ms));
+    var bar = el('div','bar'); var fill = document.createElement('i'); bar.appendChild(fill);
+    var acts = el('div','acts');
+    var plus = el('button','','Add 1 min'); plus.type='button';
+    plus.addEventListener('click', function () { t.end += 60000; t.dur += 60000; if (t.done) { t.done = false; t.dismissed = false; root.classList.remove('done'); } });
+    var stop = el('button','','Cancel'); stop.type='button';
     stop.addEventListener('click', function () { removeTimer(t); });
     acts.append(plus, stop);
     root.append(name, left, bar, acts);
     t.ui = { root: root, left: left, fill: fill };
-    timers.push(t);
-    $('timerList').appendChild(root);
-    $('noTimers').hidden = true;
+    timers.push(t); $('timerList').appendChild(root); $('noTimers').hidden = true;
   }
-  function removeTimer(t) {
-    t.ui.root.remove();
-    timers = timers.filter(function (x) { return x !== t; });
-    $('noTimers').hidden = timers.length > 0;
-    updateAlarmBanner();
-  }
-  function fmt(ms) {
-    var s = Math.max(0, Math.ceil(ms / 1000));
-    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-    var mm = (h ? String(m).padStart(2, '0') : String(m));
-    return (h ? h + ':' : '') + mm + ':' + String(sec).padStart(2, '0');
-  }
+  function removeTimer(t) { t.ui.root.remove(); timers = timers.filter(function (x) { return x !== t; }); $('noTimers').hidden = timers.length > 0; updateAlarmBanner(); }
+  function fmt(ms) { var s = Math.max(0, Math.ceil(ms / 1000)); var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60; var mm = (h ? String(m).padStart(2,'0') : String(m)); return (h ? h + ':' : '') + mm + ':' + String(sec).padStart(2,'0'); }
   function updateAlarmBanner() {
     var ringing = timers.filter(function (t) { return t.done && !t.dismissed; });
     $('alarm').classList.toggle('on', ringing.length > 0);
-    if (ringing.length) {
-      $('alarmText').textContent = ringing.length === 1 ? ringing[0].name + ' is done' : ringing.length + ' timers are done';
-    }
+    if (ringing.length) $('alarmText').textContent = ringing.length === 1 ? ringing[0].name + ' is done' : ringing.length + ' timers are done';
   }
-  $('dismiss').addEventListener('click', function () {
-    timers.forEach(function (t) { if (t.done) t.dismissed = true; });
-    updateAlarmBanner();
-  });
-
+  $('dismiss').addEventListener('click', function () { timers.forEach(function (t) { if (t.done) t.dismissed = true; }); updateAlarmBanner(); });
   setInterval(function () {
     var now = Date.now(), ring = false;
     timers.forEach(function (t) {
       var remain = t.end - now;
       if (remain <= 0) {
         if (!t.done) { t.done = true; t.dismissed = false; t.ui.root.classList.add('done'); showTab('timers'); }
-        t.ui.left.textContent = '0:00';
-        t.ui.fill.style.width = '0%';
+        t.ui.left.textContent = '0:00'; t.ui.fill.style.width = '0%';
         if (!t.dismissed) ring = true;
       } else {
-        t.ui.left.textContent = fmt(remain);
-        t.ui.fill.style.width = Math.max(0, Math.min(100, remain / t.dur * 100)) + '%';
+        t.ui.left.textContent = fmt(remain); t.ui.fill.style.width = Math.max(0, Math.min(100, remain / t.dur * 100)) + '%';
       }
     });
     if (ring) {
       updateAlarmBanner();
-      if (now - lastAlarm > 1800) {
-        lastAlarm = now;
-        beep(880, 0.15);
-        setTimeout(function () { beep(880, 0.15); }, 220);
-        setTimeout(function () { beep(1174, 0.25); }, 440);
-      }
+      if (now - lastAlarm > 1800) { lastAlarm = now; beep(880, 0.15); setTimeout(function () { beep(880, 0.15); }, 220); setTimeout(function () { beep(1174, 0.25); }, 440); }
     }
   }, 250);
 
+  /* ---------- import from Claude (menu.json), review-first ---------- */
+  var remoteMenu = null;
+  function loadMenu() {
+    fetch('menu.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('no menu'); return r.json(); })
+      .then(function (json) {
+        if (!json || !json.days || !json.version) return;
+        remoteMenu = json;
+        if (json.version !== data.version) { $('importBar').classList.add('on'); $('importText').textContent = 'Menu from ' + json.version + ' is ready to review'; }
+      })
+      .catch(function () {});
+  }
+  $('importOpen').addEventListener('click', openImportModal);
+  function openImportModal() {
+    if (!remoteMenu) return;
+    var m = $('importModal'); m.innerHTML = '';
+    var closeBtn = el('button','modal-close','Close'); closeBtn.type='button';
+    closeBtn.addEventListener('click', function () { $('importOverlay').hidden = true; });
+    m.appendChild(closeBtn);
+    m.appendChild(el('h3','','Review menu: ' + remoteMenu.version));
+    m.appendChild(el('div','sub','Pick which days to bring in. Anything already typed on the tablet stays unless you check its box.'));
+    var checks = {};
+    DAYS.forEach(function (pair) {
+      var k = pair[0], label = pair[1];
+      var incoming = remoteMenu.days[k] || { dinner: '', plans: '' };
+      var current = data.days[k] || { dinner: '', plans: '' };
+      var differs = incoming.dinner !== current.dinner || incoming.plans !== current.plans;
+      var row = el('div','block');
+      var head = document.createElement('label');
+      head.style.display = 'flex'; head.style.alignItems = 'center'; head.style.gap = '10px'; head.style.cursor = 'pointer';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = differs; cb.style.width = '20px'; cb.style.height = '20px';
+      checks[k] = cb;
+      head.appendChild(cb); head.appendChild(el('strong','', label));
+      row.appendChild(head);
+      var cur = el('div','sub','Now: ' + (current.dinner || '(nothing planned)'));
+      var inc = el('div','sub','Incoming: ' + (incoming.dinner || '(nothing planned)'));
+      inc.style.color = 'var(--sage)';
+      row.appendChild(cur); row.appendChild(inc);
+      m.appendChild(row);
+    });
+    var applyBtn = el('button','big-link','Import checked days'); applyBtn.type='button'; applyBtn.style.marginTop='18px'; applyBtn.style.display='block';
+    applyBtn.addEventListener('click', function () {
+      snapshotForUndo();
+      DAYS.forEach(function (pair) {
+        var k = pair[0];
+        if (checks[k].checked) {
+          var incoming = remoteMenu.days[k] || { dinner: '', plans: '' };
+          data.days[k] = { dinner: incoming.dinner || '', plans: incoming.plans || '', recipe: data.days[k].recipe || null };
+          if (data.days[k].recipe && normKey(data.days[k].dinner) !== data.days[k].recipe) data.days[k].recipe = null;
+        }
+      });
+      data.version = remoteMenu.version;
+      save(); renderWeek();
+      $('importOverlay').hidden = true;
+      $('importBar').classList.remove('on');
+      toast('Menu imported');
+    });
+    m.appendChild(applyBtn);
+    $('importOverlay').hidden = false;
+  }
+  document.getElementById('importOverlay').addEventListener('click', function (e) { if (e.target === this) this.hidden = true; });
+  document.getElementById('recipeOverlay').addEventListener('click', function (e) { if (e.target === this) closeRecipeModal(); });
+  setInterval(loadMenu, 5 * 60 * 1000);
+
   /* ---------- keep screen awake ---------- */
   var wl = null;
-  function wakeStatus() {
-    $('wakeMsg').textContent = wl ? 'Screen stays on while this page is open.' : 'Screen keep-awake is off. Tap anywhere to turn it on.';
-  }
+  function wakeStatus() { $('wakeMsg').textContent = wl ? 'Screen stays on while this page is open.' : 'Screen keep-awake is off. Tap anywhere to turn it on.'; }
   function keepAwake() {
     if (!('wakeLock' in navigator)) return;
-    navigator.wakeLock.request('screen').then(function (lock) {
-      wl = lock;
-      lock.addEventListener('release', function () { wl = null; wakeStatus(); });
-      wakeStatus();
-    }).catch(function () { wl = null; wakeStatus(); });
+    navigator.wakeLock.request('screen').then(function (lock) { wl = lock; lock.addEventListener('release', function () { wl = null; wakeStatus(); }); wakeStatus(); }).catch(function () { wl = null; wakeStatus(); });
   }
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') keepAwake(); });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') { keepAwake(); loadMenu(); } });
   document.addEventListener('pointerdown', function () { if (!wl) keepAwake(); });
 
-  /* ---------- full screen ---------- */
   $('fs').addEventListener('click', function () {
     if (document.fullscreenElement) { document.exitFullscreen(); }
     else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
   });
 
-  /* ---------- weekly menu file ---------- */
-  function showVersion() {
-    $('menuVer').textContent = data.version ? 'Menu ' + data.version : '';
-  }
-  function applyRemote(json) {
-    if (!json || !json.days || !json.version) return;
-    remote = json;
-    if (data.version !== json.version) {
-      /* a new menu.json replaces whatever is on the tablet, including local edits */
-      data.version = json.version;
-      data.days = JSON.parse(JSON.stringify(json.days));
-      save();
-      if (!editing) renderWeek();
-    }
-    showVersion();
-  }
-  function loadMenu() {
-    fetch('menu.json?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error('no menu'); return r.json(); })
-      .then(applyRemote)
-      .catch(function () {});
-  }
-  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') loadMenu(); });
-  setInterval(loadMenu, 5 * 60 * 1000);
+  /* ---------- test hook ---------- */
+  window.__kb = { normKey: normKey, levenshtein: levenshtein, findMatch: findMatch, data: data, idbGetAllRecipes: idbGetAllRecipes, idbPutRecipe: idbPutRecipe, blankRecipe: blankRecipe, applyNight: applyNight, inNightWindow: inNightWindow, save: save, renderWeek: renderWeek, openRecipeModal: openRecipeModal, checkStorage: checkStorage };
 
   /* ---------- go ---------- */
   tickClock();
   setInterval(tickClock, 15000);
   keepAwake();
   wakeStatus();
-  showVersion();
   loadMenu();
+  renderWeek();
 })();
 </script>
 </body>
