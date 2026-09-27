@@ -65,6 +65,10 @@
   .plans { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule); font-size: clamp(15px, 1.5vw, 19px); line-height: 1.35; color: var(--dust); }
   .plans p { white-space: pre-line; overflow-wrap: break-word; }
   .plans p + p { margin-top: 9px; }
+  .plans.events { border-top-color: var(--sage); color: var(--sage); font-weight: 700; }
+  .plans.events p::before { content: "\1F5D3\FE0F  "; font-weight: 400; }
+  .plans.notes-block { border-top-style: dashed; }
+  .day.today .plans.events { color: #3d4a1f; border-top-color: #5a6a35; }
   .day.today { background: var(--gold); color: #201208; border-left-color: var(--gold); }
   .day.today .dinner.empty { color: #5a4c12; }
   .day.today .plans { color: #4a3d10; border-top-color: #a8871c; }
@@ -266,13 +270,13 @@
   data.undo = data.undo || null;
 
   var DEFAULTS = {
-    mon: { dinner: 'Plan next week', plans: '', recipe: null },
-    tue: { dinner: '', plans: '', recipe: null },
-    wed: { dinner: "Za'atar chickpea & chicken bowls", plans: "Ollie: soft rice, chicken, mashed avocado\nAvett: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice.", recipe: null },
-    thu: { dinner: 'Beluga lentil & butternut stew', plans: 'Ollie: blended + half-and-half\nAvett: nuggets, tots, cheese stick', recipe: null },
-    fri: { dinner: 'Crispy air-fryer tacos', plans: 'Black bean + sweet potato, or chicken\nOllie: soft quesadilla\nAvett: chicken + cheese, tots', recipe: null },
-    sat: { dinner: 'White bean & kale skillet, garlic toast', plans: '', recipe: null },
-    sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts', plans: '', recipe: null }
+    mon: { dinner: 'Plan next week', events: '', plans: '', recipe: null },
+    tue: { dinner: '', events: '', plans: '', recipe: null },
+    wed: { dinner: "Za'atar chickpea & chicken bowls", events: '', plans: "Ollie: soft rice, chicken, mashed avocado\nAvett: no sauce\nPrep: 11am pressure-cook 1.5 cups brown rice.", recipe: null },
+    thu: { dinner: 'Beluga lentil & butternut stew', events: '', plans: 'Ollie: blended + half-and-half\nAvett: nuggets, tots, cheese stick', recipe: null },
+    fri: { dinner: 'Crispy air-fryer tacos', events: '', plans: 'Black bean + sweet potato, or chicken\nOllie: soft quesadilla\nAvett: chicken + cheese, tots', recipe: null },
+    sat: { dinner: 'White bean & kale skillet, garlic toast', events: '', plans: '', recipe: null },
+    sun: { dinner: 'Mushroom & kale frittata, hot-honey sprouts', events: '', plans: '', recipe: null }
   };
   var hasSaved = false;
   try { hasSaved = localStorage.getItem(STORE) !== null; } catch (e) {}
@@ -351,7 +355,8 @@
     var today = KEYS[new Date().getDay()];
     DAYS.forEach(function (pair) {
       var k = pair[0], label = pair[1];
-      var d = data.days[k] || (data.days[k] = { dinner: '', plans: '', recipe: null });
+      var d = data.days[k] || (data.days[k] = { dinner: '', events: '', plans: '', recipe: null });
+      if (d.events == null) d.events = '';   /* backfill for days saved before this field existed */
       var col = el('section', 'day' + (k === today ? ' today' : ''));
       col.appendChild(el('h2', '', label));
       if (editing) {
@@ -360,7 +365,8 @@
           d.dinner = v;
         });
         col.appendChild(dinnerBox);
-        col.appendChild(field('Practice, games, plans', d.plans, function (v) { d.plans = v; }));
+        col.appendChild(field('Practice, games, events', d.events, function (v) { d.events = v; }));
+        col.appendChild(field('Kid notes, prep reminders', d.plans, function (v) { d.plans = v; }));
       } else {
         var btn = el('button', 'dinner' + (d.dinner ? '' : ' empty'));
         btn.type = 'button';
@@ -372,8 +378,13 @@
           btn.disabled = true;
         }
         col.appendChild(btn);
+        if (d.events) {
+          var ev = el('div', 'plans events');
+          d.events.split('\n').forEach(function (line) { if (line.trim()) ev.appendChild(el('p', '', line)); });
+          col.appendChild(ev);
+        }
         if (d.plans) {
-          var pl = el('div', 'plans');
+          var pl = el('div', 'plans' + (d.events ? ' notes-block' : ''));
           d.plans.split('\n').forEach(function (line) { if (line.trim()) pl.appendChild(el('p', '', line)); });
           col.appendChild(pl);
         }
@@ -397,7 +408,7 @@
   $('clear').addEventListener('click', function () {
     if (window.confirm('Clear every dinner and plan for the week? Recipes already saved to the library are not affected.')) {
       snapshotForUndo();
-      Object.keys(data.days).forEach(function (k) { data.days[k] = { dinner: '', plans: '', recipe: null }; });
+      Object.keys(data.days).forEach(function (k) { data.days[k] = { dinner: '', events: '', plans: '', recipe: null }; });
       save(); renderWeek();
     }
   });
@@ -808,7 +819,7 @@
     closeBtn.addEventListener('click', function () { $('importOverlay').hidden = true; });
     m.appendChild(closeBtn);
     m.appendChild(el('h3','','Review menu: ' + remoteMenu.version));
-    m.appendChild(el('div','sub','Pick which days to bring in. Anything already typed on the tablet stays unless you check its box.'));
+    m.appendChild(el('div','sub','Pick which days to bring in. Anything already typed on the tablet stays unless you check its box. Events are never touched by an import.'));
     var checks = {};
     DAYS.forEach(function (pair) {
       var k = pair[0], label = pair[1];
@@ -835,7 +846,8 @@
         var k = pair[0];
         if (checks[k].checked) {
           var incoming = remoteMenu.days[k] || { dinner: '', plans: '' };
-          data.days[k] = { dinner: incoming.dinner || '', plans: incoming.plans || '', recipe: data.days[k].recipe || null };
+          /* menu.json never carries events (those are typed on the tablet only) — keep whatever is already there */
+          data.days[k] = { dinner: incoming.dinner || '', events: data.days[k].events || '', plans: incoming.plans || '', recipe: data.days[k].recipe || null };
           if (data.days[k].recipe && normKey(data.days[k].dinner) !== data.days[k].recipe) data.days[k].recipe = null;
         }
       });
