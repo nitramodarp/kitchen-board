@@ -1,25 +1,40 @@
 {
   "version": "2026-09-27",
   "days": {
-    "sun": {
-      "dinner": "Leftovers night — stew, dal, and chicken",
-      "plans": "Reheat and set out, no new cooking. Back from the 3pm game."
-    },
     "mon": {
       "dinner": "Mushroom & kale frittata, hot-honey Brussels sprouts",
-      "plans": "Moved up to use the mushrooms and kale before they turn. Cast iron on stovetop, covered, 8-10 min. Sprouts in air fryer 380F 12-14 min, tossed with hot honey last 2 min."
+      "plans": "Moved up to use the mushrooms and kale before they turn. Cast iron on stovetop, covered, 8-10 min. Sprouts in air fryer 380F 12-14 min, tossed with hot honey last 2 min.",
+      "events": "U14 SCCL Training, ~6-7pm\nMarching Band Rehearsal, ~6-8pm"
     },
     "tue": {
       "dinner": "Crispy air-fryer tacos",
-      "plans": "Black bean + sweet potato, or chicken, in corn tortillas."
+      "plans": "Black bean + sweet potato, or chicken, in corn tortillas.",
+      "events": "Marching Band Rehearsal, ~4-6pm\nU14 SCCL Third Session, ~6-7pm"
     },
     "wed": {
       "dinner": "Creamy white bean & kale skillet, garlic toast",
-      "plans": "Onion/garlic/spice prep can be done ahead."
+      "plans": "Onion/garlic/spice prep can be done ahead.",
+      "events": "Trash to Curb, 6pm\nU14 SCCL Training \u2014 Rush Union, Milton Soccer Complex, ~6-7:30pm"
     },
     "thu": {
       "dinner": "Plan next week",
-      "plans": ""
+      "plans": "",
+      "events": "Ollie: FLOP field trip pickup at 4:30\nMarching Band Rehearsal, ~5-7pm"
+    },
+    "fri": {
+      "dinner": "",
+      "plans": "",
+      "events": "BOA Prelim, ~3-4pm\nFootball @ Sequoyah, ~7-9pm"
+    },
+    "sat": {
+      "dinner": "",
+      "plans": "",
+      "events": "Bands of America (competition day)"
+    },
+    "sun": {
+      "dinner": "Leftovers night — stew, dal, and chicken",
+      "plans": "Reheat and set out, no new cooking. Back from the 3pm game.",
+      "events": "SCCL Game #4501 \u2014 Chestnut Log Soccer Complex, Field 7, 2544 Pope Rd, Douglasville, ~3-5pm"
     }
   }
 }
