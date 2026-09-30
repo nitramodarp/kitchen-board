@@ -1,40 +1,29 @@
 {
-  "version": "2026-09-27d",
+  "weekOf": "2026-09-28",
   "days": {
     "mon": {
       "dinner": "Mushroom & kale frittata, hot-honey Brussels sprouts",
-      "plans": "Moved up to use the mushrooms and kale before they turn. Cast iron on stovetop, covered, 8-10 min. Sprouts in air fryer 380F 12-14 min, tossed with hot honey last 2 min.",
-      "events": "U14 SCCL Training, ~6-7pm\nMarching Band Rehearsal, ~6-8pm"
+      "notes": "Moved up to use the mushrooms and kale before they turn. Cast iron on stovetop, covered, 8-10 min. Sprouts in air fryer 380F 12-14 min, tossed with hot honey last 2 min."
     },
     "tue": {
       "dinner": "Crispy air-fryer tacos",
-      "plans": "Black bean + sweet potato, or chicken, in corn tortillas.",
-      "events": "Marching Band Rehearsal, ~4-6pm\nU14 SCCL Third Session, ~6-7pm"
+      "notes": "Black bean + sweet potato, or chicken, in corn tortillas."
     },
     "wed": {
       "dinner": "Creamy white bean & kale skillet, garlic toast",
-      "plans": "Onion/garlic/spice prep can be done ahead.",
-      "events": "Trash to Curb, 6pm\nU14 SCCL Training — Rush Union, Milton Soccer Complex, ~6-7:30pm"
+      "notes": "Onion/garlic/spice prep can be done ahead."
     },
     "thu": {
       "dinner": "Turmeric-ginger coconut lentil & sweet potato dal, garlicky wilted kale",
-      "plans": "Doctor's Kitchen style — anti-inflammatory turmeric, ginger, garlic base, coconut milk instead of tomato. Last higher-fiber night before meals get gentler starting tomorrow.",
-      "events": "Ollie: FLOP field trip pickup at 4:30\nMarching Band Rehearsal, ~5-7pm"
+      "notes": "Anti-inflammatory turmeric, ginger, garlic base, coconut milk instead of tomato. Last higher-fiber night before meals get gentler starting tomorrow."
     },
     "fri": {
       "dinner": "Turmeric-ginger silken tofu & white rice bowl, steamed peeled carrots",
-      "plans": "Low-fiber meals start tonight — white rice (not brown), peeled and well-cooked veg only, no skins, seeds, or whole grains. Soft scrambled eggs on the side for extra protein if wanted.",
-      "events": "BOA Prelim, ~3-4pm\nFootball @ Sequoyah, ~7-9pm"
+      "notes": "Low-fiber meals start tonight: white rice (not brown), peeled and well-cooked veg only, no skins, seeds, or whole grains. Soft scrambled eggs on the side for extra protein if wanted."
     },
     "sat": {
       "dinner": "Soft scrambled eggs & melted gouda over white rice, mashed peeled sweet potato, silky steamed spinach",
-      "plans": "Still low-fiber — rice not brown, sweet potato peeled and mashed smooth, spinach well-cooked and kept to a small portion.",
-      "events": "Bands of America (competition day)"
-    },
-    "sun": {
-      "dinner": "Leftovers night — stew, dal, and chicken",
-      "plans": "Reheat and set out, no new cooking. Back from the 3pm game.",
-      "events": "SCCL Game #4501 — Chestnut Log Soccer Complex, Field 7, 2544 Pope Rd, Douglasville, ~3-5pm"
+      "notes": "Still low-fiber: rice not brown, sweet potato peeled and mashed smooth, spinach well-cooked and kept to a small portion."
     }
   }
 }
