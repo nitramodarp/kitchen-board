@@ -1,29 +1,33 @@
 {
-  "weekOf": "2026-09-28",
+  "weekOf": "2026-10-05",
   "days": {
     "mon": {
-      "dinner": "Mushroom & kale frittata, hot-honey Brussels sprouts",
-      "notes": "Moved up to use the mushrooms and kale before they turn. Cast iron on stovetop, covered, 8-10 min. Sprouts in air fryer 380F 12-14 min, tossed with hot honey last 2 min."
+      "dinner": "Roasted Brussels sprouts + shredded chicken thighs, rice",
+      "notes": "Brussels sprouts aging, so using them up early."
     },
     "tue": {
-      "dinner": "Crispy air-fryer tacos",
-      "notes": "Black bean + sweet potato, or chicken, in corn tortillas."
+      "dinner": "Beef burgers, oven fries (regular potato)",
+      "notes": "Fasting day for one person, no dinner for her."
     },
     "wed": {
-      "dinner": "Creamy white bean & kale skillet, garlic toast",
-      "notes": "Onion/garlic/spice prep can be done ahead."
+      "dinner": "Her plate: plain baked or pan-seared tofu, white rice. Everyone else: your call.",
+      "notes": "Low-fiber, vegetarian, light on dairy. Boys can have nuggets/tots alongside."
     },
     "thu": {
-      "dinner": "Turmeric-ginger coconut lentil & sweet potato dal, garlicky wilted kale",
-      "notes": "Anti-inflammatory turmeric, ginger, garlic base, coconut milk instead of tomato. Last higher-fiber night before meals get gentler starting tomorrow."
+      "dinner": "Leftover stuffing, reheated, with a quick kale sauté",
+      "notes": "Practice night, quick reheat. Uses up the aging kale."
     },
     "fri": {
-      "dinner": "Turmeric-ginger silken tofu & white rice bowl, steamed peeled carrots",
-      "notes": "Low-fiber meals start tonight: white rice (not brown), peeled and well-cooked veg only, no skins, seeds, or whole grains. Soft scrambled eggs on the side for extra protein if wanted."
+      "dinner": "White bean & spinach skillet with roasted sweet potato, crusty bread",
+      "notes": "Uses up the aging spinach."
     },
     "sat": {
-      "dinner": "Soft scrambled eggs & melted gouda over white rice, mashed peeled sweet potato, silky steamed spinach",
-      "notes": "Still low-fiber: rice not brown, sweet potato peeled and mashed smooth, spinach well-cooked and kept to a small portion."
+      "dinner": "Rigatoni with white beans and parmesan",
+      "notes": "Boys can do plain buttered pasta."
+    },
+    "sun": {
+      "dinner": "Pick up a rotisserie chicken + roast veg",
+      "notes": "Restock day."
     }
   }
 }
