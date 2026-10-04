@@ -3,11 +3,13 @@
   "days": {
     "mon": {
       "dinner": "Roasted Brussels sprouts + shredded chicken thighs, rice",
-      "notes": "Brussels sprouts aging, so using them up early."
+      "notes": "Brussels sprouts aging, so using them up early.",
+      "lunch": "Chickpea couscous bowl, feta, hemp hearts, red pepper, olives"
     },
     "tue": {
       "dinner": "Beef burgers, oven fries (regular potato)",
-      "notes": "Fasting day for one person, no dinner for her."
+      "notes": "Fasting day for one person, no dinner for her.",
+      "lunch": "Monday's chicken, rice and sprouts, packed cold"
     },
     "wed": {
       "dinner": "Her plate: plain baked or pan-seared tofu, white rice. Everyone else: your call.",
@@ -15,11 +17,13 @@
     },
     "thu": {
       "dinner": "Leftover stuffing, reheated, with a quick kale sauté",
-      "notes": "Practice night, quick reheat. Uses up the aging kale."
+      "notes": "Practice night, quick reheat. Uses up the aging kale.",
+      "lunch": "Hummus and feta sandwich on Ezekiel, carrots, almonds"
     },
     "fri": {
       "dinner": "White bean & spinach skillet with roasted sweet potato, crusty bread",
-      "notes": "Uses up the aging spinach."
+      "notes": "Uses up the aging spinach.",
+      "lunch": "Black bean couscous bowl, avocado, feta, pumpkin seeds"
     },
     "sat": {
       "dinner": "Rigatoni with white beans and parmesan",
