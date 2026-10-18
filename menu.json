@@ -1,37 +1,29 @@
 {
-  "weekOf": "2026-10-05",
+  "weekOf": "2026-10-19",
   "days": {
     "mon": {
-      "dinner": "Roasted Brussels sprouts + shredded chicken thighs, rice",
-      "notes": "Brussels sprouts aging, so using them up early.",
-      "lunch": "Chickpea couscous bowl, feta, hemp hearts, red pepper, olives"
+      "dinner": "Tacos: black beans, sautéed peppers, avocado, salsa",
+      "notes": "Quick night. Beans and peppers can be done ahead."
     },
     "tue": {
-      "dinner": "Beef burgers, oven fries (regular potato)",
-      "notes": "Fasting day for one person, no dinner for her.",
-      "lunch": "Monday's chicken, rice and sprouts, packed cold"
+      "dinner": "Rigatoni with pesto and white beans",
+      "notes": "20 minutes start to finish."
     },
     "wed": {
-      "dinner": "Her plate: plain baked or pan-seared tofu, white rice. Everyone else: your call.",
-      "notes": "Low-fiber, vegetarian, light on dairy. Boys can have nuggets/tots alongside."
+      "dinner": "Breakfast for dinner: pancakes, scrambled eggs, blueberries",
+      "notes": "Whole wheat pastry flour pancakes."
     },
     "thu": {
-      "dinner": "Leftover stuffing, reheated, with a quick kale sauté",
-      "notes": "Practice night, quick reheat. Uses up the aging kale.",
-      "lunch": "Hummus and feta sandwich on Ezekiel, carrots, almonds"
+      "dinner": "Turkey burgers, sweet potato fries, green beans",
+      "notes": "Fries in the air fryer."
     },
     "fri": {
-      "dinner": "White bean & spinach skillet with roasted sweet potato, crusty bread",
-      "notes": "Uses up the aging spinach.",
-      "lunch": "Black bean couscous bowl, avocado, feta, pumpkin seeds"
+      "dinner": "Loaded sweet potato bar: black beans, Fage, toppings",
+      "notes": "Uses 2 of the sweet potatoes."
     },
     "sat": {
-      "dinner": "Rigatoni with white beans and parmesan",
-      "notes": "Boys can do plain buttered pasta."
-    },
-    "sun": {
-      "dinner": "Pick up a rotisserie chicken + roast veg",
-      "notes": "Restock day."
+      "dinner": "Sweet potato and black bean quesadillas, salsa and avocado",
+      "notes": "Mash sweet potato in place of cheese."
     }
   }
 }
