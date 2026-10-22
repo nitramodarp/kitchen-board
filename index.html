@@ -191,6 +191,7 @@
     <button class="tab" role="tab" data-tab="recipes" aria-selected="false">Recipes</button>
     <button class="tab" role="tab" data-tab="groceries" aria-selected="false">Groceries</button>
     <button class="tab" role="tab" data-tab="timers" aria-selected="false">Timers</button>
+    <button class="icon-btn" id="nightToggle" type="button">Dark: Auto</button>
     <button class="icon-btn" id="fs" type="button">Full screen</button>
   </nav>
 </header>
@@ -361,8 +362,18 @@
 
   /* ---------- clock, night mode, week rollover ---------- */
   var lastDayNum = -1, awakeTimer = null;
+  data.nightMode = data.nightMode || 'auto'; // 'auto' | 'on' | 'off'
   function inNightWindow(d) { var h = d.getHours(); return h >= 22 || h < 7; }
-  function applyNight() { document.body.classList.toggle('night', inNightWindow(new Date())); }
+  function isNightNow() {
+    if (data.nightMode === 'on') return true;
+    if (data.nightMode === 'off') return false;
+    return inNightWindow(new Date());
+  }
+  function applyNight() {
+    document.body.classList.toggle('night', isNightNow());
+    var btn = $('nightToggle');
+    if (btn) btn.textContent = 'Dark: ' + (data.nightMode === 'on' ? 'On' : data.nightMode === 'off' ? 'Off' : 'Auto');
+  }
   function wakeUp() {
     if (!document.body.classList.contains('night')) return;
     document.body.classList.add('awake');
@@ -370,6 +381,13 @@
     awakeTimer = setTimeout(function () { document.body.classList.remove('awake'); }, 90000);
   }
   document.addEventListener('pointerdown', wakeUp);
+  $('nightToggle').addEventListener('click', function () {
+    document.body.classList.remove('awake');
+    clearTimeout(awakeTimer);
+    data.nightMode = data.nightMode === 'auto' ? 'on' : data.nightMode === 'on' ? 'off' : 'auto';
+    save();
+    applyNight();
+  });
   function tickClock() {
     var now = new Date();
     $('time').textContent = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
