@@ -1,29 +1,33 @@
 {
-  "weekOf": "2026-10-19",
+  "weekOf": "2026-10-26",
   "days": {
     "mon": {
-      "dinner": "Tacos: black beans, sautéed peppers, avocado, salsa",
-      "notes": "Quick night. Beans and peppers can be done ahead."
+      "dinner": "Black bean and sweet potato chili over jasmine rice",
+      "notes": "Start in the slow cooker or pressure cooker in the morning. Dice and cook down both peppers in it. Keeps warm until late."
     },
     "tue": {
-      "dinner": "Rigatoni with pesto and white beans",
-      "notes": "20 minutes start to finish."
+      "dinner": "Trottole macaroni with carrots, chickpeas and celery, pesto and olive oil",
+      "notes": "Green onions on top. About 20 minutes."
     },
     "wed": {
-      "dinner": "Breakfast for dinner: scrambled eggs, toast, blueberries",
-      "notes": "Dropped pancakes - oven's still out."
+      "dinner": "Quesadillas with sweet potato mash and shredded cheese, green beans on the side",
+      "notes": "Use up the leftover green beans."
     },
     "thu": {
-      "dinner": "Turkey burgers, sweet potato fries, green beans",
-      "notes": "Fries in the air fryer."
+      "dinner": "Gnocchi with onion, white beans, garlic and olive oil",
+      "notes": "About 15 minutes."
     },
     "fri": {
-      "dinner": "Loaded sweet potato bar: black beans, Fage, toppings",
-      "notes": "Uses 2 of the sweet potatoes."
+      "dinner": "Air-fryer nuggets and tots, veggie plate with hummus",
+      "notes": "No-cook night."
     },
     "sat": {
-      "dinner": "Sweet potato and black bean quesadillas, salsa and avocado",
-      "notes": "Mash sweet potato in place of cheese."
+      "dinner": "Tortellini or mac and cheese",
+      "notes": "Early and quick."
+    },
+    "sun": {
+      "dinner": "Beluga lentils over jasmine rice with sautéed carrots and onion, sauerkraut on the side",
+      "notes": "Good night to use up what's left in the fridge."
     }
   }
 }
