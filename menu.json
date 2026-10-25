@@ -10,12 +10,12 @@
       "notes": "Green onions on top. About 20 minutes."
     },
     "wed": {
-      "dinner": "Quesadillas with sweet potato mash and shredded cheese, green beans on the side",
-      "notes": "Use up the leftover green beans."
-    },
-    "thu": {
       "dinner": "Gnocchi with onion, white beans, garlic and olive oil",
       "notes": "About 15 minutes."
+    },
+    "thu": {
+      "dinner": "Beluga lentils over jasmine rice with sautéed carrots and onion, sauerkraut on the side",
+      "notes": "Cook a fresh batch of lentils."
     },
     "fri": {
       "dinner": "Air-fryer nuggets and tots, veggie plate with hummus",
@@ -24,10 +24,6 @@
     "sat": {
       "dinner": "Tortellini or mac and cheese",
       "notes": "Early and quick."
-    },
-    "sun": {
-      "dinner": "Beluga lentils over jasmine rice with sautéed carrots and onion, sauerkraut on the side",
-      "notes": "Good night to use up what's left in the fridge."
     }
   }
 }
