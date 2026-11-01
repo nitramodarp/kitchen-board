@@ -213,6 +213,7 @@
         <button id="undoBtn" type="button" hidden>Undo</button>
         <button id="importBtn" type="button" hidden>Import dinners</button>
         <button id="copyBtn" type="button">Copy dinners to next week</button>
+        <button id="copyEvBtn" type="button">Copy events forward</button>
         <button id="clearBtn" type="button">Clear week</button>
       </div>
     </div>
@@ -327,7 +328,8 @@
   function peekDay(wk, dk) { var w = data.weeks[wk]; return Object.assign(blankDay(), (w && w.days && w.days[dk]) || {}); }
 
   var undoState = null;
-  function pushUndo(wk) { undoState = { wk: wk, week: data.weeks[wk] ? JSON.parse(JSON.stringify(data.weeks[wk])) : null }; }
+  function snap(wk) { return { wk: wk, week: data.weeks[wk] ? JSON.parse(JSON.stringify(data.weeks[wk])) : null }; }
+  function pushUndo(wk, alsoWks) { undoState = snap(wk); undoState.more = (alsoWks || []).map(snap); }
 
   var currentWeekKey = keyOf(mondayOf(new Date()));
   var viewWeek = currentWeekKey;
@@ -474,7 +476,9 @@
   $('thisWeek').addEventListener('click', function () { viewWeek = currentWeekKey; renderWeek(); });
   $('undoBtn').addEventListener('click', function () {
     if (!undoState) return;
-    if (undoState.week) data.weeks[undoState.wk] = undoState.week; else delete data.weeks[undoState.wk];
+    [undoState].concat(undoState.more || []).forEach(function (u) {
+      if (u.week) data.weeks[u.wk] = u.week; else delete data.weeks[u.wk];
+    });
     viewWeek = undoState.wk; undoState = null; save(); renderWeek(); toast('Undone');
   });
   $('clearBtn').addEventListener('click', function () {
@@ -497,6 +501,60 @@
     });
     viewWeek = nk; save(); renderWeek(); toast('Dinners copied to next week');
   });
+
+  /* ---------- copy events to future weeks (fills empty days only) ---------- */
+  var FUTURE_WEEKS = 8;
+  function hasText(t) { return !!(t && t.trim()); }
+  // Returns 'copied', 'skipped' (target already has events) or 'none' (nothing to copy).
+  function copyEventsTo(srcWk, dk, targetWk) {
+    var src = peekDay(srcWk, dk).events;
+    if (!hasText(src)) return 'none';
+    if (hasText(peekDay(targetWk, dk).events)) return 'skipped';
+    ensureWeek(targetWk).days[dk].events = src;
+    return 'copied';
+  }
+  function copyEventsSummary(copied, skipped) {
+    if (!copied && !skipped) return 'Nothing to copy';
+    var msg = copied ? 'Copied events to ' + copied + (copied === 1 ? ' day' : ' days') : 'No empty days to fill';
+    if (skipped) msg += ' · ' + skipped + ' already had events, left alone';
+    return msg;
+  }
+  function openCopyEventsModal() {
+    var anyEvents = DAY_KEYS.some(function (k) { return hasText(peekDay(viewWeek, k).events); });
+    if (!anyEvents) { toast('No events on this week to copy'); return; }
+    var m = $('editModal'); m.innerHTML = '';
+    var cancel = el('button', 'modal-close', 'Cancel'); cancel.type = 'button'; cancel.addEventListener('click', closeEditor);
+    m.appendChild(cancel);
+    m.appendChild(el('h3', '', 'Copy events forward'));
+    m.appendChild(el('div', 'sub', 'Copies this week’s events (' + weekLabel(viewWeek) + ') to the weeks you pick, day for day. Only days with no events yet are filled — anything already there is left alone.'));
+    var picked = {}, chips = el('div', 'chips');
+    for (var n = 1; n <= FUTURE_WEEKS; n++) (function (wk) {
+      var c = el('button', 'chip', weekLabel(wk)); c.type = 'button';
+      c.addEventListener('click', function () { picked[wk] = !picked[wk]; c.classList.toggle('on', !!picked[wk]); });
+      chips.appendChild(c);
+    })(keyOf(addDays(parseKey(viewWeek), 7 * n)));
+    m.appendChild(chips);
+    var acts = el('div', 'ed-actions');
+    var go = el('button', 'big-link', 'Copy'); go.type = 'button';
+    go.addEventListener('click', function () {
+      var wks = Object.keys(picked).filter(function (k) { return picked[k]; }).sort();
+      if (!wks.length) { toast('Pick at least one week'); return; }
+      pushUndo(wks[0], wks.slice(1));
+      var copied = 0, skipped = 0;
+      wks.forEach(function (wk) {
+        DAY_KEYS.forEach(function (dk) {
+          var r = copyEventsTo(viewWeek, dk, wk);
+          if (r === 'copied') copied++; else if (r === 'skipped') skipped++;
+        });
+      });
+      if (!copied) undoState = null;
+      save(); renderWeek(); closeEditor(); toast(copyEventsSummary(copied, skipped));
+    });
+    acts.appendChild(go);
+    m.appendChild(acts);
+    $('editOverlay').hidden = false;
+  }
+  $('copyEvBtn').addEventListener('click', openCopyEventsModal);
 
   /* ---------- tabs ---------- */
   function showTab(name) {
@@ -589,8 +647,22 @@
       rp.appendChild(rch); m.appendChild(rp);
     }
 
+    var futurePick = {};
+    if (field === 'events') {
+      var fb = el('div', 'block'); fb.appendChild(el('h4', '', 'Copy to future ' + DAY_NAMES[i] + 's (empty days only)'));
+      var fch = el('div', 'chips');
+      for (var n = 1; n <= FUTURE_WEEKS; n++) (function (fwk) {
+        var fd = addDays(parseKey(fwk), i);
+        var c = el('button', 'chip', MONTHS[fd.getMonth()] + ' ' + fd.getDate()); c.type = 'button';
+        c.addEventListener('click', function () { futurePick[fwk] = !futurePick[fwk]; c.classList.toggle('on', !!futurePick[fwk]); });
+        fch.appendChild(c);
+      })(keyOf(addDays(parseKey(wk), 7 * n)));
+      fb.appendChild(fch); m.appendChild(fb);
+    }
+
     function commit(openRecipeAfter, clearing) {
-      pushUndo(wk);
+      var fwks = clearing ? [] : Object.keys(futurePick).filter(function (k) { return futurePick[k]; }).sort();
+      pushUndo(wk, fwks);
       var w = ensureWeek(wk), day = w.days[dk];
       var text = clearing ? '' : ta.value.replace(/\s+$/, '');
       if (field === 'dinner') {
@@ -608,7 +680,13 @@
         else if (field === 'lunch') { t.lunch = day.lunch; if (day.noSchool) t.noSchool = true; }
         else t.events = day.events;
       });
+      var fCopied = 0, fSkipped = 0;
+      fwks.forEach(function (fwk) {
+        var r = copyEventsTo(wk, dk, fwk);
+        if (r === 'copied') fCopied++; else if (r === 'skipped') fSkipped++;
+      });
       save(); renderWeek(); closeEditor();
+      if (fwks.length) toast(copyEventsSummary(fCopied, fSkipped));
       if (openRecipeAfter) openRecipeFor(wk, dk);
     }
     var acts = el('div', 'ed-actions');
