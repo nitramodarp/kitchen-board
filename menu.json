@@ -1,29 +1,21 @@
 {
-  "weekOf": "2026-10-26",
+  "weekOf": "2026-11-02",
   "days": {
-    "mon": {
-      "dinner": "Trottole with carrots, chickpeas and celery, pesto and olive oil",
-      "notes": "Made Monday."
-    },
     "wed": {
-      "dinner": "Black bean, carrot and sweet potato chili over jasmine rice",
-      "notes": "Slow cooker on high 5 hours. Mash some beans to thicken; salt and lime at the end."
-    },
-    "thu": {
       "dinner": "Gnocchi with onion, white beans, garlic and olive oil",
-      "notes": "About 15 minutes."
+      "notes": "About 15 minutes. Eat before practice."
     },
     "fri": {
       "dinner": "Air-fryer nuggets and tots, veggie plate with hummus",
       "notes": "No-cook night."
     },
     "sat": {
-      "dinner": "Tortellini or mac and cheese",
-      "notes": "Early and quick."
+      "dinner": "Pesto tortellini with sautéed spinach and white beans",
+      "notes": "Easy evening."
     },
     "sun": {
-      "dinner": "Beluga lentils over jasmine rice with sautéed carrots and onion, sauerkraut on the side",
-      "notes": "Cook a fresh batch of lentils."
+      "dinner": "Leftovers: chana masala and tikka masala over rice",
+      "notes": "Mac and cheese as backup."
     }
   }
 }
