@@ -334,8 +334,6 @@
 
   var currentWeekKey = keyOf(mondayOf(new Date()));
   var viewWeek = currentWeekKey;
-  var lastTouch = Date.now();
-  document.addEventListener('pointerdown', function () { lastTouch = Date.now(); });
 
   /* ---------- recipe library (IndexedDB) ---------- */
   var dbp = new Promise(function (resolve, reject) {
@@ -401,8 +399,6 @@
       currentWeekKey = keyOf(mondayOf(now));
       if (wasFollowing) viewWeek = currentWeekKey;
       renderWeek();
-    } else if (viewWeek !== currentWeekKey && Date.now() - lastTouch > 3 * 60 * 1000 && $('editOverlay').hidden && $('importOverlay').hidden && $('recipeOverlay').hidden) {
-      viewWeek = currentWeekKey; renderWeek();
     }
     applyNight();
   }
