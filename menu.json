@@ -1,25 +1,29 @@
 {
-  "weekOf": "2026-11-09",
+  "weekOf": "2026-11-16",
   "days": {
+    "mon": {
+      "dinner": "Out: pizza",
+      "notes": "Nothing to cook."
+    },
+    "tue": {
+      "dinner": "Burrito bowls: rice, black beans, corn, salsa",
+      "notes": "Quick. Ready early."
+    },
     "wed": {
-      "dinner": "Veggie fried rice with scrambled eggs, carrots, onion and corn",
-      "notes": "Use the leftover brown rice."
+      "dinner": "Crispy gnocchi with white beans, spinach and lemon",
+      "notes": "Soft and easy to chew. Good night for a real cook."
     },
     "thu": {
-      "dinner": "Build-your-own burrito bowls: rice, black beans, corn, salsa, tomato",
-      "notes": "Cheese optional. About 15 minutes. Eat before practice."
+      "dinner": "Pesto tortellini with sautéed spinach and white beans",
+      "notes": "About 15 minutes."
     },
     "fri": {
-      "dinner": "Burger night: veggie and beef burgers, air-fryer fries, carrot sticks and hummus",
-      "notes": "Relaxed night."
+      "dinner": "Build-your-own taco bar",
+      "notes": "Scales for a big group. Pasta bar is the alternative."
     },
     "sat": {
-      "dinner": "Spaghetti with garlic, olive oil, chickpeas and lemon",
-      "notes": "Quick after the game. Plain portion for Avett."
-    },
-    "sun": {
-      "dinner": "Pesto tortellini with sautéed kale",
-      "notes": "Plain portion for Avett."
+      "dinner": "Pizza night (or something simple)",
+      "notes": "Still open."
     }
   }
 }
